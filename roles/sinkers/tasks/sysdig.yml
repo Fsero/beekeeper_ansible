@@ -1,3 +1,13 @@
+- name: 'sysdig | retrieve apt-key'
+  apt_key:
+      url: "{{ sysdig_repo_key_url }}"
+      id: "{{ sysdig_repo_key_id }}"  
+      
+- name: 'sysdig | setup apt repo'
+  apt_repository:
+      repo: "deb http://download.draios.com/stable/deb stable-$(ARCH)/"
+      state: present
+
 - name: 'get linux sources'
   apt: name=linux-source state=present
   tags: 'sinkers::sysdig'

@@ -1,15 +1,16 @@
 [submodule "roles/dev-sec.ssh-hardening"]
 	path = roles/dev-sec.ssh-hardening
 	url = https://github.com/Fsero/ansible-ssh-hardening.git
+	branch = stable
 [submodule "roles/simple-pki"]
 	path = roles/simple-pki
 	url = https://github.com/Fsero/ansible-simple-pki.git
-[submodule "roles/ansible-apt"]
-	path = roles/ansible-apt
-	url = https://github.com/Fsero/ansible-apt.git
+	branch = stable
 [submodule "roles/ansible-rsyslog"]
 	path = roles/ansible-rsyslog
 	url = https://github.com/Fsero/ansible-rsyslog-1.git
+	branch = stable
 [submodule "roles/ansible-docker"]
 	path = roles/ansible-docker
 	url = https://github.com/Fsero/ansible-docker.git
+	branch = stable

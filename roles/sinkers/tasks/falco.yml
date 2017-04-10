@@ -1,3 +1,14 @@
+- name: ' falco | retrieve apt-key'
+  apt_key:
+      url: "{{ sysdig_repo_key_url }}"
+      id: "{{ sysdig_repo_key_id }}"
+
+- name: 'falco | setup apt repo'
+  apt_repository:
+      repo: "deb http://download.draios.com/stable/deb stable-$(ARCH)/"
+      state: present
+
+
 - name: 'installing falco'
   apt: 
     name: falco=0.6.0 
@@ -7,6 +18,18 @@
 - name: 'setting up falco driver'
   command: falco-probe-loader
   become: yes
+  tags: 'sinkers::falco'
+
+- stat:
+    path: "{{ role_path }}/files/gocode"
+  register: gocode_folder
+  tags: 'sinkers::falco'
+
+- name: 'create gocode folder'
+  file:
+    path: "{{ role_path }}/files/gocode"
+    state: directory
+  when: gocode_folder.stat.isdir is not defined 
   tags: 'sinkers::falco'
 
 - name: 'get container_recycler repo'
