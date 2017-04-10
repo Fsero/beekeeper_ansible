@@ -1,0 +1,13 @@
+[Unit]
+Description=Launch containers at startup
+
+[Service]
+Type=forking
+ExecStart=/usr/local/sbin/containersvc start
+ExecStop=/usr/local/sbin/containersvc stop
+RemainAfterExit=no
+Restart=always
+PIDFile=/var/run/containersvc.pid
+
+[Install]
+WantedBy=multi-user.target

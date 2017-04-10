@@ -1,0 +1,2 @@
+secrets_pki_host: pki.vm.localhost
+secrets_certs_path: "{{ inventory_dir }}/storage/simple-pki/{{ secrets_pki_host }}"

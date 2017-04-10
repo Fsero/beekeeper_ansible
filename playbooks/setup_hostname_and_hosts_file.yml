@@ -1,0 +1,3 @@
+- hosts: '!newjoiners'
+  roles:
+      - { role: ansible-hosts-manager, become: true, when: ansible_os_family == 'Debian' }

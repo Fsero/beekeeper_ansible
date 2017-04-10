@@ -1,0 +1,2 @@
+secrets_pki_host: 138.68.138.252
+secrets_certs_path: "{{ inventory_dir }}/storage/simple-pki/{{ secrets_pki_host }}"

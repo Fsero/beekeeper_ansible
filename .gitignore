@@ -1,0 +1,7 @@
+.idea
+*.sw*
+.vagrant
+*.retry
+ansible/secret/*
+inventory/*/storage/*
+roles/sinkers/files/gocode*
