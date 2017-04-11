@@ -15,8 +15,6 @@
     mode: 0755
   tags: 'sinkers::docker'
 
-  
-
 - name: 'setting up containers as a service'
   copy:
       src: "{{ item.src }}"
@@ -27,8 +25,6 @@
   with_items: "{{container_files}}"
   tags: 'sinkers::docker'
 
-
-  
 - name: 'building base image'
   shell:  cd {{container_directory}} && docker build -f {{container_directory}}/Dockerfile-base -t servicebase:0.0.1 .
   tags: 'sinkers::docker'

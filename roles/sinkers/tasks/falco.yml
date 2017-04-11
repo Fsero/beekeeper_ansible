@@ -43,6 +43,14 @@
   delegate_to: 127.0.0.1
   tags: 'sinkers::falco'
 
+  
+- name: 'get golang compiler'
+  include_role:
+        name: ansible-go
+  become: true
+  delegate_to: 127.0.0.1
+  tags: 'sinkers::falco'
+
 - name: 'compile container_recycler'
   shell: "export GOPATH={{ role_path }}/files/gocode/; cd $GOPATH/src/bitbucket.org/fseros/container_recycler && make "
   become: false
