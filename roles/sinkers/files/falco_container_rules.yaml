@@ -203,8 +203,8 @@
 - rule: Write below binary dir
   desc: an attempt to write to any file below a set of binary directories
   condition: in_potted_container and bin_dir and evt.dir = < and open_write and not package_mgmt_procs
-  output: "File below a known binary directory opened for writing (user=%user.name command=%proc.cmdline file=%fd.name)"
-  priority: WARNING
+  output: "File below a known binary directory opened for writing (%container.info user=%user.name command=%proc.cmdline file=%fd.name)"
+  priority: ALERT
 
 - macro: write_etc_common
   condition: >
@@ -217,7 +217,7 @@
   desc: an attempt to write to any file below /etc, not in a pipe installer session
   condition: in_potted_container and write_etc_common and not proc.sname=fbash
   output: "File below /etc opened for writing (user=%user.name command=%proc.cmdline file=%fd.name)"
-  priority: WARNING
+  priority: ALERT
 
 # Within a fbash session, the severity is lowered to INFO
 - rule: Write below etc in installer
@@ -230,38 +230,38 @@
   desc: an attempt to read any sensitive file (e.g. files containing user/password/authentication information) by a trusted program after startup. Trusted programs might read these files at startup to load initial state, but not afterwards.
   condition: in_potted_container and sensitive_files and open_read and server_procs and not proc_is_new and proc.name!="sshd"
   output: "Sensitive file opened for reading by trusted program after startup (user=%user.name command=%proc.cmdline file=%fd.name)"
-  priority: WARNING
+  priority: ALERT
 
 - rule: Read sensitive file untrusted
   desc: an attempt to read any sensitive file (e.g. files containing user/password/authentication information). Exceptions are made for known trusted programs.
   condition: in_potted_container and sensitive_files and open_read and not proc.name in (user_mgmt_binaries, userexec_binaries, package_mgmt_binaries, cron_binaries, iptables, ps, lsb_release, check-new-relea, dumpe2fs, accounts-daemon, shell_binaries, sshd) and not proc.cmdline contains /usr/bin/mandb
   output: "Sensitive file opened for reading by non-trusted program (user=%user.name name=%proc.name command=%proc.cmdline file=%fd.name)"
-  priority: WARNING
+  priority: ALERT
 
 # Only let rpm-related programs write to the rpm database
 - rule: Write below rpm database
   desc: an attempt to write to the rpm database by any non-rpm related program
   condition: in_potted_container and fd.name startswith /var/lib/rpm and open_write and not proc.name in (dnf,rpm,rpmkey,yum)
   output: "Rpm database opened for writing by a non-rpm program (command=%proc.cmdline file=%fd.name)"
-  priority: WARNING
+  priority: ALERT
 
 - rule: DB program spawned process
   desc: a database-server related program spawned a new process other than itself. This shouldn\'t occur and is a follow on from some SQL injection attacks.
   condition: in_potted_container and proc.pname in (db_server_binaries) and spawned_process and not proc.name in (db_server_binaries)
   output: "Database-related program spawned process other than itself (user=%user.name program=%proc.cmdline parent=%proc.pname)"
-  priority: WARNING
+  priority: ALERT
 
 - rule: Modify binary dirs
   desc: an attempt to modify any file below a set of binary directories.
   condition: in_potted_container and bin_dir_rename and modify and not package_mgmt_procs
   output: "File below known binary directory renamed/removed (user=%user.name command=%proc.cmdline operation=%evt.type file=%fd.name %evt.args)"
-  priority: WARNING
+  priority: ALERT
 
 - rule: Mkdir binary dirs
   desc: an attempt to create a directory below a set of binary directories.
   condition: in_potted_container and mkdir and bin_dir_mkdir and not package_mgmt_procs
   output: "Directory below known binary directory created (user=%user.name command=%proc.cmdline directory=%evt.arg.path)"
-  priority: WARNING
+  priority: ALERT
 
 # Don't load shared objects coming from unexpected places
 # Commenting this out for now--there are lots of shared library
@@ -270,7 +270,7 @@
 # permissive.
 # - condition: open_read and fd.name contains .so and not (linux_so_dirs)
 #   output: "Loaded .so from unexpected dir (%user.name %proc.name %evt.dir %evt.type %evt.args %fd.name)"
-#   priority: WARNING
+#   priority: ALERT
 
 # Temporarily disabling this rule as it's tripping over https://github.com/draios/sysdig/issues/598
 # - rule: Syscall returns eaccess
@@ -283,13 +283,13 @@
   desc: an attempt to change a program/thread\'s namespace (commonly done as a part of creating a container) by calling setns.
   condition: in_potted_container and evt.type = setns and not proc.name in (docker_binaries, k8s_binaries, sysdigcloud_binaries, sysdig, nsenter) and not proc.pname in (sysdigcloud_binaries)
   output: "Namespace change (setns) by unexpected program (user=%user.name command=%proc.cmdline parent=%proc.pname %container.info)"
-  priority: WARNING
+  priority: ALERT
 
 - rule: Run shell untrusted
   desc: an attempt to spawn a shell by a non-shell program. Exceptions are made for trusted binaries.
   condition: in_potted_container and spawned_process and not container and shell_procs and proc.pname exists and not proc.pname in (cron_binaries, shell_binaries, sshd, sudo, docker_binaries, k8s_binaries, su, tmux, screen, emacs, systemd, login, flock, fbash, nginx, monit, supervisord, dragent, aws, initdb, docker-compose, make, configure, awk, falco, fail2ban-server, apt-get, apt)
   output: "Shell spawned by untrusted binary (user=%user.name shell=%proc.name parent=%proc.pname cmdline=%proc.cmdline)"
-  priority: WARNING
+  priority: ALERT
 
 - macro: trusted_containers
   condition: (container.image startswith sysdig/agent or container.image startswith sysdig/falco or container.image startswith sysdig/sysdig or container.image startswith gcr.io/google_containers/hyperkube or container.image startswith gcr.io/google_containers/kube-proxy)
@@ -298,7 +298,7 @@
   desc: Any open by a privileged container. Exceptions are made for known trusted images.
   condition: in_potted_container and (open_read or open_write) and container and container.privileged=true and not trusted_containers
   output: File opened for read/write by privileged container (user=%user.name command=%proc.cmdline %container.info file=%fd.name)
-  priority: WARNING
+  priority: ALERT
 
 - macro: sensitive_mount
   condition: (container.mount.dest[/proc*] != "N/A")
@@ -307,13 +307,13 @@
   desc: Any open by a container that has a mount from a sensitive host directory (i.e. /proc). Exceptions are made for known trusted images.
   condition: in_potted_container and (open_read or open_write) and container and sensitive_mount and not trusted_containers
   output: File opened for read/write by container mounting sensitive directory (user=%user.name command=%proc.cmdline %container.info file=%fd.name)
-  priority: WARNING
+  priority: ALERT
 
 - rule: System user interactive
   desc: an attempt to run interactive commands by a system (i.e. non-login) user
   condition: in_potted_container and spawned_process and system_users and interactive
-  output: "System user ran an interactive command (user=%user.name command=%proc.cmdline)"
-  priority: WARNING
+  output: "System user ran an interactive command (%container.info user=%user.name command=%proc.cmdline)"
+  priority: ALERT
 
 - rule: Run shell in container
   desc: a shell was spawned by a non-shell program in a container. Container entrypoints are excluded.
@@ -326,7 +326,7 @@
   desc: any network activity performed by system binaries that are not expected to send or receive any network traffic
   condition: in_potted_container and (fd.sockfamily = ip and system_procs) and (inbound or outbound)
   output: "Known system binary sent/received network traffic (user=%user.name command=%proc.cmdline connection=%fd.name)"
-  priority: WARNING
+  priority: ALERT
 
 # With the current restriction on system calls handled by falco
 # (e.g. excluding read/write/sendto/recvfrom/etc, this rule won't
@@ -335,53 +335,53 @@
 #   desc: any ssh errors (failed logins, disconnects, ...) sent to syslog
 #   condition: syslog and ssh_error_message and evt.dir = <
 #   output: "sshd sent error message to syslog (error=%evt.buffer)"
-#   priority: WARNING
+#   priority: ALERT
 
 # sshd, mail programs attempt to setuid to root even when running as non-root. Excluding here to avoid meaningless FPs
 - rule: Non sudo setuid
   desc: an attempt to change users by calling setuid. sudo/su are excluded. user "root" is also excluded, as setuid calls typically involve dropping privileges.
   condition: in_potted_container and evt.type=setuid and evt.dir=> and not user.name=root and not proc.name in (userexec_binaries, mail_binaries, sshd, dbus-daemon-lau)
   output: "Unexpected setuid call by non-sudo, non-root program (user=%user.name command=%proc.cmdline uid=%evt.arg.uid)"
-  priority: WARNING
+  priority: ALERT
 
 - rule: User mgmt binaries
   desc: activity by any programs that can manage users, passwords, or permissions. sudo and su are excluded. Activity in containers is also excluded--some containers create custom users on top of a base linux distribution at startup.
   condition: in_potted_container and spawned_process and proc.name in (user_mgmt_binaries) and not proc.name in (su, sudo) and not container and not proc.pname in (cron_binaries, systemd, run-parts)
   output: "User management binary command run outside of container (user=%user.name command=%proc.cmdline parent=%proc.pname)"
-  priority: WARNING
+  priority: ALERT
 
 # (we may need to add additional checks against false positives, see: https://bugs.launchpad.net/ubuntu/+source/rkhunter/+bug/86153)
 - rule: Create files below dev
   desc: creating any files below /dev other than known programs that manage devices. Some rootkits hide files in /dev.
   condition: in_potted_container and fd.directory = /dev and (evt.type = creat or (evt.type = open and evt.arg.flags contains O_CREAT)) and proc.name != blkid and not fd.name in (/dev/null,/dev/stdin,/dev/stdout,/dev/stderr,/dev/tty)
   output: "File created below /dev by untrusted program (user=%user.name command=%proc.cmdline file=%fd.name)"
-  priority: WARNING
+  priority: ALERT
 
 # fbash is a small shell script that runs bash, and is suitable for use in curl <curl> | fbash installers.
 - rule: Installer bash starts network server
   desc: an attempt by a program in a pipe installer session to start listening for network connections
   condition: in_potted_container and evt.type=listen and proc.sname=fbash
   output: "Unexpected listen call by a process in a fbash session (command=%proc.cmdline)"
-  priority: WARNING
+  priority: ALERT
 
 - rule: Installer bash starts session
   desc: an attempt by a program in a pipe installer session to start a new session
   condition: in_potted_container and evt.type=setsid and proc.sname=fbash
   output: "Unexpected setsid call by a process in fbash session (command=%proc.cmdline)"
-  priority: WARNING
+  priority: ALERT
 
 - rule: Installer bash non https connection
   desc: an attempt by a program in a pipe installer session to make an outgoing connection on a non-http(s) port
   condition: in_potted_container and proc.sname=fbash and outbound and not fd.sport in (80, 443, 53)
   output: "Outbound connection on non-http(s) port by a process in a fbash session (command=%proc.cmdline connection=%fd.name)"
-  priority: WARNING
+  priority: ALERT
 
 # It'd be nice if we could warn when processes in a fbash session try
 # to download from any nonstandard location? This is probably blocked
 # on https://github.com/draios/falco/issues/88 though.
 
 # Notice when processes try to run chkconfig/systemctl.... to install a service.
-# Note: this is not a WARNING, as you'd expect some service management
+# Note: this is not a ALERT, as you'd expect some service management
 # as a part of doing the installation.
 - rule: Installer bash manages service
   desc: an attempt by a program in a pipe installer session to manage a system service (systemd/chkconfig)
@@ -390,7 +390,7 @@
   priority: INFO
 
 # Notice when processes try to run any package management binary within a fbash session.
-# Note: this is not a WARNING, as you'd expect some package management
+# Note: this is not a ALERT, as you'd expect some package management
 # as a part of doing the installation
 - rule: Installer bash runs pkgmgmt program
   desc: an attempt by a program in a pipe installer session to run a package management binary
@@ -421,13 +421,13 @@
 #   desc: inbound network traffic to elasticsearch on a port other than the standard ports
 #   condition: user.name = elasticsearch and inbound and not elasticsearch_port
 #   output: "Inbound network traffic to Elasticsearch on unexpected port (connection=%fd.name)"
-#   priority: WARNING
+#   priority: ALERT
 
 # - rule: Elasticsearch unexpected network outbound traffic
 #   desc: outbound network traffic from elasticsearch on a port other than the standard ports
 #   condition: user.name = elasticsearch and outbound and not elasticsearch_cluster_port
 #   output: "Outbound network traffic from Elasticsearch on unexpected port (connection=%fd.name)"
-#   priority: WARNING
+#   priority: ALERT
 
 
 # ActiveMQ ports
@@ -442,13 +442,13 @@
 #   desc: inbound network traffic to activemq on a port other than the standard ports
 #   condition: user.name = activemq and inbound and not activemq_port
 #   output: "Inbound network traffic to ActiveMQ on unexpected port (connection=%fd.name)"
-#   priority: WARNING
+#   priority: ALERT
 
 # - rule: Activemq unexpected network outbound traffic
 #   desc: outbound network traffic from activemq on a port other than the standard ports
 #   condition: user.name = activemq and outbound and not activemq_cluster_port
 #   output: "Outbound network traffic from ActiveMQ on unexpected port (connection=%fd.name)"
-#   priority: WARNING
+#   priority: ALERT
 
 
 # Cassandra ports
@@ -470,13 +470,13 @@
 #   desc: inbound network traffic to cassandra on a port other than the standard ports
 #   condition: user.name = cassandra and inbound and not cassandra_port
 #   output: "Inbound network traffic to Cassandra on unexpected port (connection=%fd.name)"
-#   priority: WARNING
+#   priority: ALERT
 
 # - rule: Cassandra unexpected network outbound traffic
 #   desc: outbound network traffic from cassandra on a port other than the standard ports
 #   condition: user.name = cassandra and outbound and not (cassandra_ssl_cluster_port or cassandra_cluster_port)
 #   output: "Outbound network traffic from Cassandra on unexpected port (connection=%fd.name)"
-#   priority: WARNING
+#   priority: ALERT
 
 # Couchdb ports
 # https://github.com/davisp/couchdb/blob/master/etc/couchdb/local.ini
@@ -497,13 +497,13 @@
 #   desc: inbound network traffic to fluentd on a port other than the standard ports
 #   condition: user.name = td-agent and inbound and not (fluentd_forward_port or fluentd_http_port)
 #   output: "Inbound network traffic to Fluentd on unexpected port (connection=%fd.name)"
-#   priority: WARNING
+#   priority: ALERT
 
 # - rule: Tdagent unexpected network outbound traffic
 #   desc: outbound network traffic from fluentd on a port other than the standard ports
 #   condition: user.name = td-agent and outbound and not fluentd_forward_port
 #   output: "Outbound network traffic from Fluentd on unexpected port (connection=%fd.name)"
-#   priority: WARNING
+#   priority: ALERT
 
 # Gearman ports
 # http://gearman.org/protocol/
@@ -511,7 +511,7 @@
 #   desc: outbound network traffic from gearman on a port other than the standard ports
 #   condition: user.name = gearman and outbound and outbound and not fd.sport = 4730
 #   output: "Outbound network traffic from Gearman on unexpected port (connection=%fd.name)"
-#   priority: WARNING
+#   priority: ALERT
 
 # Zookeeper
 - macro: zookeeper_port
@@ -522,20 +522,20 @@
 #   desc: inbound network traffic to kafka on a port other than the standard ports
 #   condition: user.name = kafka and inbound and fd.sport != 9092
 #   output: "Inbound network traffic to Kafka on unexpected port (connection=%fd.name)"
-#   priority: WARNING
+#   priority: ALERT
 
 # Memcached ports
 # - rule: Memcached unexpected network inbound traffic
 #   desc: inbound network traffic to memcached on a port other than the standard ports
 #   condition: user.name = memcached and inbound and fd.sport != 11211
 #   output: "Inbound network traffic to Memcached on unexpected port (connection=%fd.name)"
-#   priority: WARNING
+#   priority: ALERT
 
 # - rule: Memcached unexpected network outbound traffic
 #   desc: any outbound network traffic from memcached. memcached never initiates outbound connections.
 #   condition: user.name = memcached and outbound
 #   output: "Unexpected Memcached outbound connection (connection=%fd.name)"
-#   priority: WARNING
+#   priority: ALERT
 
 
 # MongoDB ports
@@ -552,17 +552,17 @@
 #   desc: inbound network traffic to mongodb on a port other than the standard ports
 #   condition: user.name = mongodb and inbound and not (mongodb_server_port or mongodb_shardserver_port or mongodb_configserver_port or mongodb_webserver_port)
 #   output: "Inbound network traffic to MongoDB on unexpected port (connection=%fd.name)"
-#   priority: WARNING
+#   priority: ALERT
 
 # MySQL ports
 # - rule: Mysql unexpected network inbound traffic
 #   desc: inbound network traffic to mysql on a port other than the standard ports
 #   condition: user.name = mysql and inbound and fd.sport != 3306
 #   output: "Inbound network traffic to MySQL on unexpected port (connection=%fd.name)"
-#   priority: WARNING
+#   priority: ALERT
 
 - rule: HTTP server unexpected network inbound traffic
   desc: inbound network traffic to a http server program on a port other than the standard ports
   condition: in_potted_container and proc.name in (http_server_binaries) and inbound and fd.sport != 80 and fd.sport != 443
   output: "Inbound network traffic to HTTP Server on unexpected port (connection=%fd.name)"
-  priority: WARNING
+  priority: ALERT
