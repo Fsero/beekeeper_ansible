@@ -1,0 +1,5 @@
+---
+dependencies:
+- role: dev-sec.ssh-hardening
+  become: true
+  when: ansible_os_family == 'Debian'

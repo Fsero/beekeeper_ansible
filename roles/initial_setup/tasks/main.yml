@@ -1,0 +1,2 @@
+- include: host_bootstrap.yml
+- include: setup_route53_entries.yml
