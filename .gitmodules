@@ -17,3 +17,4 @@
 [submodule "roles/ansible-go"]
 	path = roles/ansible-go
 	url = https://github.com/Fsero/ansible-go.git
+	branch = stable
