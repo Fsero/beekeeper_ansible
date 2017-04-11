@@ -28,6 +28,10 @@
 - name: 'install curl'
   apt: name=curl state=present
 
+
+- name: 'install git'
+  apt: name=git state=present
+
 - name: 'install dbus'
   apt: name=dbus state=present
 

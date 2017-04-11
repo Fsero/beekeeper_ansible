@@ -37,7 +37,8 @@
       repo: 'git@bitbucket.org:fseros/container_recycler.git'
       dest: "{{ role_path }}/files/gocode/src/bitbucket.org/fseros/container_recycler"
       ssh_opts: "-o StrictHostKeyChecking=no"
-      version: 0.0.5
+      version: 0.0.5    
+  when: gocode_folder.stat.isdir is not defined 
   become: false
   delegate_to: 127.0.0.1
   tags: 'sinkers::falco'
