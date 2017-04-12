@@ -1,0 +1,37 @@
+- name: 'install setuptools'
+  apt: name=python-setuptools state=present cache_valid_time=3600
+
+- name: 'install python-dev'
+  apt: name=python-dev state=present cache_valid_time=3600
+
+- name: 'install libffi-dev'
+  apt: name=libffi-dev state=present cache_valid_time=3600
+
+- name: 'install build-essential'
+  apt: name=build-essential state=present cache_valid_time=3600
+
+- name: 'install libssl-dev'
+  apt: name=libssl-dev state=present cache_valid_time=3600
+
+- name: 'install pip'
+  apt: name=python-pip state=present cache_valid_time=3600
+
+- name: 'install curl'
+  apt: name=curl state=present cache_valid_time=3600
+
+- name: 'install git'
+  apt: name=git state=present cache_valid_time=3600
+
+- name: 'install dbus'
+  apt: name=dbus state=present cache_valid_time=3600
+
+- name: 'installing rsyslog-gnutls'
+  apt: name=rsyslog-gnutls state=present cache_valid_time=3600
+
+- name: 'upgrade pip'
+  pip: name=pip state=latest
+  become: true
+
+- name: 'install requests'
+  pip: name=requests state=present
+  become: true
