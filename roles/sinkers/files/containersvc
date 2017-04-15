@@ -23,7 +23,7 @@ do_start() {
     else
       docker system prune -f
       cd /var/tmp/image
-      export RANDOM_PASSWORD=$(sort -R /usr/share/dict/words | head -1)
+      export RANDOM_PASSWORD=$(sort -R /usr/share/dict/random_password_1000000 | head -1)
       export RANDOM_NAME=$(sort -R /usr/share/dict/words | head -1 | tr -d "'")
       docker-compose up --build &
       echo $! > $PIDFILE
