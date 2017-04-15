@@ -19,7 +19,7 @@
   tags: 'sinkers::sysdig'
 - name: 'installing sysdig'
   apt:
-    name: "sysdig=0.14.0"
+    name: "sysdig"
     state: "present"
   tags: 'sinkers::sysdig'
 - name: 'testing if sysdig works'
