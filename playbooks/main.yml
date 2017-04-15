@@ -1,4 +1,5 @@
 #- include: debug_vars.yml
+#- include: setup_new_hosts.yml
 - include: setup_hostname_and_hosts_file.yml
 - include: setup_hosts_ca.yml
 - include: setup_users_ca.yml
