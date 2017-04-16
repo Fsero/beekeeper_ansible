@@ -8,6 +8,15 @@
   become: true
   tags: 'sinkers::docker'
 
+
+- name: 'starting up docker'
+  systemd:
+    state: started
+    name: docker
+    daemon_reload: no
+    enabled: yes
+  tags: 'sinkers::docker'
+
 - name: 'create Docker image directory'
   file:
     path: "{{ container_directory }}"
@@ -28,6 +37,7 @@
 - name: 'building base image'
   shell:  cd {{container_directory}} && docker build -f {{container_directory}}/Dockerfile-base -t servicebase:0.0.1 .
   tags: 'sinkers::docker'
+
   
 - name: 'starting up containersvc'
   systemd:
@@ -36,6 +46,8 @@
     daemon_reload: no
     enabled: yes
   tags: 'sinkers::docker'
+
+
 
 - name: 'reloading containersvc service'
   command: /usr/local/sbin/containersvc stop
