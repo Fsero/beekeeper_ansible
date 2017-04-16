@@ -16,6 +16,7 @@ falco_files:
 container_directory: "/var/tmp/image"
 
 container_files:
+  - { src: '../files/typical_passwords', dest: "/usr/share/dict/typical_passwords", mode: '0444' }
   - { src: '../files/random_password_100', dest: "/usr/share/dict/random_password_100", mode: '0444' }
   - { src: '../files/random_password_1000000', dest: "/usr/share/dict/random_password_1000000", mode: '0444' }
   - { src: '../files/Dockerfile', dest: "{{ container_directory }}/Dockerfile", mode: '0500' }
