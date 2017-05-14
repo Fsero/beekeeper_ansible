@@ -12,20 +12,27 @@
 DESC="sysdig daemon"
 NAME="sysdigd"
 PIDFILE="/var/run/sysdigd.pid"
+TRACES_DIR="/var/log/traces"
 KPID=$(cat $PIDFILE)
 
 do_start() {
     if [ ! -d /var/log/traces ];then
         logger -t info "creating traces directory"
-        mkdir -p /var/log/traces
+        mkdir -p $TRACES_DIR &> /dev/null
+
     fi
 
     if [ -n "${KPID}" -a -d "/proc/${KPID}" ];then
         logger -t info [sysdigd] sysdig already running
     else
         logger -t info [sysdigd] launching sysdigd
-        bash -c 'sysdig -s 4096 -pc -F -C 200 -G 300 -W 5 -z -w /var/log/traces/$(hostname).%F-%H-%M.part > /dev/null 2>&1 &'
-	sleep 5
+        local year = $(date "+%Y")
+        local month = $(date "+%m")    
+        local day = $(date "+%d")
+        local external_ip = $(curl ifconfig.co)
+        mkdir -p "$TRACES_DIR/$year/$month/$day/" &> /dev/null
+        bash -c 'sysdig -s 4096 -pc -F -C 200 -G 300 -W 5 -z -w /var/log/traces/$year/$month/$day/$(hostname).%F-%H-%M.part > /dev/null 2>&1 &'
+        sleep 5
         logger -t info [sysdigd] launched sysdigd
         PID=$(pidof sysdig)
         if [ -z "$PID" ];then
