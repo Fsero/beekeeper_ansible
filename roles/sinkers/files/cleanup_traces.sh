@@ -15,7 +15,7 @@ get_free_disk_left() {
 check_if_cleanup_is_needed () {
     if [[ $FREE_SPACE -le $FREE_SPACE_THRESHOLD ]]; then
         logger -t info "[cleanup] removing old traces"
-        find $TRACES_DIR -path $TRACES_DIR/.ssh -prune -mmin +$LAST_MODIFIED_FILES_TO_KEEP_IN_MINUTES -print0 | xargs -0 -L 50 rm 
+        find $TRACES_DIR -xtype f -mmin +$LAST_MODIFIED_FILES_TO_KEEP_IN_MINUTES -print0 | xargs -0 -L 50 rm 
     fi
 }
 
