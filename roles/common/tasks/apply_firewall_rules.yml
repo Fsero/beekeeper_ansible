@@ -11,7 +11,25 @@
   
   
 # show all the hosts in the inventory
-    
+- name: update rules for ipv6
+  template:
+    src: common.iptablesv6.rules.j2
+    dest: "/etc/iptables/rulesv6"
+    validate: "ip6tables-converter -s %s "
+    owner: root
+    group: root
+    mode: 0440
+  tags: 'common::firewall'
+
+- name: create rules for ipv6
+  shell: ip6tables-converter -s /etc/iptables/rulesv6 > /etc/iptables/rules.v6
+  become: true
+  tags: 'common::firewall'
+
+- name: apply rules for ipv6
+  shell: ip6tables-restore < /etc/iptables/rules.v6
+  become: true
+  tags: 'common::firewall'
 
 - name: removing old rules
   file:

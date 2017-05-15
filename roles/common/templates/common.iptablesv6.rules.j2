@@ -1,0 +1,10 @@
+# Set up default policies
+
+ip6tables -P INPUT DROP
+ip6tables -P FORWARD DROP
+ip6tables -P OUTPUT DROP
+
+
+# Allow localhost traffic. This rule is for all protocols.
+
+ip6tables -A INPUT -s ::1 -d ::1 -j ACCEPT
