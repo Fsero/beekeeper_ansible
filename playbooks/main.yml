@@ -6,5 +6,5 @@
 - include: setup_file_retrieval.yml
 - include: setup_ca_and_copy_certs.yml
 - include: setup_dependencies.yml
-- include: setup_syslog.yml
+#- include: setup_syslog.yml
 

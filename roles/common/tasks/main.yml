@@ -1,4 +1,5 @@
 - include: install_common_dependencies.yml
 - include: swap.yml
 - include: setup_route53_entries.yml
+- include: apply_firewall_rules.yml
 

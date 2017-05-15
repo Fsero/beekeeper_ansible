@@ -1,0 +1,6 @@
+---
+sysdig_repo_key_url: "https://s3.amazonaws.com/download.draios.com/DRAIOS-GPG-KEY.public"
+sysdig_repo_key_id: "EC51E8C4"
+
+es_files:
+  - { src: '../files/elasticsearch/docker-compose.yaml', dest: '', mode: '0444' }

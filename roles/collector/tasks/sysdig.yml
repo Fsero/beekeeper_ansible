@@ -1,0 +1,29 @@
+- name: 'sysdig | retrieve apt-key'
+  apt_key:
+      url: "{{ sysdig_repo_key_url }}"
+      id: "{{ sysdig_repo_key_id }}"  
+      
+- name: 'sysdig | setup apt repo'
+  apt_repository:
+      repo: "deb http://download.draios.com/stable/deb stable-$(ARCH)/"
+      state: present
+
+- name: 'get linux sources'
+  apt: name=linux-source state=present
+  tags: 'sinkers::sysdig'
+- name: 'get linux sources'
+  apt: name=linux-kernel-headers state=present
+  tags: 'sinkers::sysdig'
+- name: 'updating repo'
+  apt: update_cache=yes
+  tags: 'sinkers::sysdig'
+- name: 'installing sysdig'
+  apt:
+    name: "sysdig"
+    state: "present"
+  tags: 'sinkers::sysdig'
+- name: 'testing if sysdig works'
+  become: yes
+  command: sysdig-probe-loader
+  tags: 'sinkers::sysdig'
+

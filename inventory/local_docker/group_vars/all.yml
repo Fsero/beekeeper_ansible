@@ -1,2 +1,3 @@
 secrets_pki_host: pki.docker.localhost
 secrets_certs_path: "{{ inventory_dir }}/storage/simple-pki/{{ secrets_pki_host }}"
+firewall_ipaddr_filter: '172.16.0.0/16'

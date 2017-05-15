@@ -5,6 +5,7 @@
 - name: 'install apt https transport'
   apt: name=apt-transport-https state=present cache_valid_time=3600
 
+
 - name: 'install setuptools'
   apt: name=python-setuptools state=present cache_valid_time=3600
 

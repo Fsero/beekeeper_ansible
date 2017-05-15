@@ -1,0 +1,66 @@
+# tasks file for rsyslog
+
+- name: 'install iptables tools'
+  apt: name=iptables-persistent state=present cache_valid_time=3600
+  tags: 'common::firewall'
+  
+
+- name: 'install iptables converter'
+  apt: name=iptables-converter state=present cache_valid_time=3600
+  tags: 'common::firewall'
+  
+  
+# show all the hosts in the inventory
+    
+
+- name: removing old rules
+  file:
+    path: etc/iptables/rules
+    state: absent
+  tags: 'common::firewall'
+
+
+- name: update rules for pki
+  template:
+    src: mon.iptables.rules.j2
+    dest: "/etc/iptables/rules"
+    validate: "iptables-converter -s %s "
+    owner: root
+    group: root
+    mode: 0440
+  when:  "'pki' in group_names"
+  tags: 'common::firewall'
+  
+
+- name: update rules for sinkers
+  template:
+    src: sinkers.iptables.rules.j2
+    dest: "/etc/iptables/rules"
+    validate: "iptables-converter -s %s "
+    owner: root
+    group: root
+    mode: 0440
+  when:  "'sinkers' in group_names"
+  tags: 'common::firewall'
+  
+- name: update rules for collectors
+  template:
+    src: collector.iptables.rules.j2
+    dest: "/etc/iptables/rules"
+    validate: "iptables-converter -s %s "
+    owner: root
+    group: root
+    mode: 0440
+  when:  "'collector' in group_names"
+  tags: 'common::firewall'
+  
+- name: create rules
+  shell: iptables-converter -s /etc/iptables/rules > /etc/iptables/rules.v4
+  become: true
+  tags: 'common::firewall'
+  
+- name: reload iptables
+  shell: iptables-restore < /etc/iptables/rules.v4
+  become: true
+  tags: 'common::firewall'
+  

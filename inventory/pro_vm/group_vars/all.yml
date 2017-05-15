@@ -1,2 +1,3 @@
 secrets_pki_host: mon.superprivyhosting.com
 secrets_certs_path: "{{ inventory_dir }}/storage/simple-pki/{{ secrets_pki_host }}"
+firewall_ipaddr_filter: 'public'

@@ -12,6 +12,12 @@
     shell: mkpasswd --method=SHA-512 {{ user_password.stdout }}
     register: encrypted_user_password
 
+  - name: create traces folder
+    file:
+      path: /var/log/traces
+      state: directory
+      mode: 0755
+
   - name: creating ansible user in sinkers
     user:
       name: file

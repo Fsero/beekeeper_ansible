@@ -8,10 +8,8 @@ rsyslog_rsyslog_collector_host_name: "main01.superprivyhosting.com"
 rsyslog_rsyslog_d_files:
       10-forward-all-logs-to-collector:
         settings:
-
           # make gtls driver the default
           - $DefaultNetstreamDriver gtls
-
           - $DefaultNetstreamDriverCAFile {{ rsyslog_rsyslog_tls_ca_path }}
           - $DefaultNetstreamDriverCertFile {{ rsyslog_rsyslog_tls_cert_path }}
           - $DefaultNetstreamDriverKeyFile {{ rsyslog_rsyslog_tls_key_path }}
@@ -30,5 +28,6 @@ rsyslog_file_group: adm
 rsyslog_file_create_mode: '0640'
 rsyslog_dir_create_mode: '0755'
 rsyslog_umask: '0022'
+
 #rsyslog_priv_drop_to_user: syslog
 #rsyslog_priv_drop_to_group: syslog

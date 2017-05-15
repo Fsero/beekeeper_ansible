@@ -1,0 +1,8 @@
+
+- include: docker.yml
+- include: syslog.yml
+
+- include: elasticsearch.yml
+
+
+
