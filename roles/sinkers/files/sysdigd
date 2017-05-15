@@ -26,12 +26,12 @@ do_start() {
         logger -t info [sysdigd] sysdig already running
     else
         logger -t info [sysdigd] launching sysdigd
-        local year = $(date "+%Y")
-        local month = $(date "+%m")    
-        local day = $(date "+%d")
-        local external_ip = $(curl ifconfig.co)
+        local year=$(date "+%Y")
+        local month=$(date "+%m")    
+        local day=$(date "+%d")
+        local external_ip=$(curl ifconfig.co)
         mkdir -p "$TRACES_DIR/$year/$month/$day/" &> /dev/null
-        bash -c 'sysdig -s 4096 -pc -F -C 200 -G 300 -W 5 -z -w /var/log/traces/$year/$month/$day/$(hostname).%F-%H-%M.part > /dev/null 2>&1 &'
+        bash -c "sysdig -s 4096 -pc -F -C 200 -G 300 -W 5 -z -w /var/log/traces/$year/$month/$day/$(hostname).%F-%H-%M.part > /dev/null 2>&1 &"
         sleep 5
         logger -t info [sysdigd] launched sysdigd
         PID=$(pidof sysdig)
@@ -67,4 +67,3 @@ case "$1" in
 esac
 
 exit 0
-
