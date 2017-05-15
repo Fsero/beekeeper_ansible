@@ -42,6 +42,14 @@
     daemon_reload: yes
     enabled: yes
   tags: 'sinkers::sysdig'
+- name: 'restarting up sysdig'
+  systemd:
+    state: restarted
+    name: sysdigd
+    daemon_reload: yes
+    enabled: yes
+  tags: 'sinkers::sysdig'
+  
 - name: 'installing cleanup traces script'
   cron:
     name: "cleanup traces to not fill disk"
