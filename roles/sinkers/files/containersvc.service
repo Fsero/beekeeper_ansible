@@ -5,6 +5,7 @@ Description=Launch containers at startup
 Type=forking
 ExecStart=/usr/local/sbin/containersvc start
 ExecStop=/usr/local/sbin/containersvc stop
+Requires=docker.service
 RemainAfterExit=no
 Restart=always
 PIDFile=/var/run/containersvc.pid

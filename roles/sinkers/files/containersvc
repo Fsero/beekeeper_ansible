@@ -39,7 +39,11 @@ do_stop() {
      kill $KPID
      cd /var/tmp/image
      docker-compose stop
+     # clearing up older iptables routes
+     iptables -Z -t nat
+     iptables -F -t nat
      /usr/local/sbin/tc_manager.sh stop image_ssh
+     /etc/init.d/docker
  fi
 }
 
