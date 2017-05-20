@@ -11,7 +11,7 @@
 
 - name: 'installing falco'
   apt: 
-    name: falco=0.6.0 
+    name: falco 
     state: present
   tags: 'sinkers::falco'
 

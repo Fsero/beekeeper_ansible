@@ -1,7 +1,6 @@
 
 - include: docker.yml
-- include: syslog.yml
-
+- include: sysdig.yml
 - include: elasticsearch.yml
 
 
