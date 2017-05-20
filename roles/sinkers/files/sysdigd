@@ -26,7 +26,7 @@ do_start() {
         logger -t info [sysdigd] sysdig already running
     else
         logger -t info [sysdigd] launching sysdigd
-        bash -c "sysdig -s 4096 -pc -F -C 200 -G 300 -W 5 -z -w /var/log/traces/$(hostname).%F-%H-%M.part container.id != host > /dev/null 2>&1 &"
+        bash -c "sysdig -s 4096 -pc -F -C 200 -G 300 -W 5 -z -w /var/log/traces/$(hostname).%F-%H-%M.part ' (container.id != host) or (proc.name = docker-proxy) ' > /dev/null 2>&1 &"
         sleep 5
         logger -t info [sysdigd] launched sysdigd
         PID=$(pidof sysdig)
