@@ -1,3 +1,4 @@
+- include: settimezone.yml
 - include: install_common_dependencies.yml
 - include: swap.yml
 - include: setup_route53_entries.yml

@@ -17,10 +17,19 @@
     enabled: yes
   tags: 'sinkers::docker'
 
+- name: 'restarting docker service'
+  systemd:
+    state: restarted
+    name: docker
+    daemon_reload: yes
+    enabled: yes
+  tags: 'sinkers::docker'
+
 - name: 'create Docker image directory'
   file:
     path: "{{ container_directory }}"
     state: directory
+    recurse: yes
     mode: 0755
   tags: 'sinkers::docker'
 

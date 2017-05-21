@@ -81,4 +81,15 @@
   shell: iptables-restore < /etc/iptables/rules.v4
   become: true
   tags: 'common::firewall'
+
+# handles docker, if was running we need to restart it so reapplies its own rules.
+- name: is docker already running?
+  shell: service docker status warn=false
+  register: _svc_docker
+  failed_when: _svc_docker.rc != 0 and ("unrecognized service" not in _svc_docker.stderr)
+  ignore_errors: true
+
+- name: restart docker if running
+  service: name=docker state=restarted
+  when: "_svc_docker.rc == 0"
   

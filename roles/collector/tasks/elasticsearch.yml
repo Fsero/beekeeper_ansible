@@ -1,0 +1,30 @@
+- name: 'create elasticsearch folder'
+  file:
+    path: "{{ elasticsearch_directory }}"
+    state: directory
+    mode: 0755
+  tags: 'collector::elasticsearch'
+
+- name: 'setting up elasticsearch cluster'
+  copy:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      owner: root
+      group: root
+      mode: "{{ item.mode }}"
+  with_items: "{{elasticsearch_files}}"
+  tags: 'collector::elasticsearch'
+  
+- name: 'starting up elasticsearchd'
+  systemd:
+    state: started
+    name: elasticsearchd
+    daemon_reload: yes
+    enabled: yes
+  tags: 'collector::elasticsearch'
+
+- name: 'reloading elasticsearch service'
+  command: /usr/local/sbin/elasticsearchd stop
+  when: elasticsearch_restart | default("false") | match("true")
+  tags: 'collector::elasticsearch'
+

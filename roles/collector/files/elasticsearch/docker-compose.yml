@@ -1,54 +1,176 @@
-version: '2'
+version: "2"
+
 services:
-  elasticsearch1:
-    image: docker.elastic.co/elasticsearch/elasticsearch:5.2.2
-    container_name: elasticsearch1
-    environment:
-      - cluster.name=docker-cluster
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-      nofile:
-        soft: 65536
-        hard: 65536
-    mem_limit: 1g
-    cap_add:
-      - IPC_LOCK
+  elasticsearch:
+    container_name: elasticsearch
+    extends:
+      file: common.yml
+      service: elastic
+    command:
+      - elasticsearch
+      - -Ecluster.name=potcluster
+      - -Enode.name=elasticsearch
+      - -Enode.master=false
+      - -Enode.data=false
+      - -Ediscovery.zen.ping.unicast.hosts=master01,master02,master03
+      - -Enetwork.host=_eth0_
+      - -Enode.max_local_storage_nodes=10
+    ports:
+      - "9200:9200"
+  data01:
+    container_name: data01
+    extends:
+      file: common.yml
+      service: elastic
+    command:
+      - elasticsearch
+      - -Ecluster.name=potcluster
+      - -Enode.name=data01
+      - -Enode.master=false
+      - -Ediscovery.zen.ping.unicast.hosts=master01,master02,master03
+      - -Enetwork.host=_eth0_
+      - -Enode.max_local_storage_nodes=10
+    ports:
+      - "9201:9200"
     volumes:
       - esdata1:/usr/share/elasticsearch/data
+  data02:
+    container_name: data02
+    extends:
+      file: common.yml
+      service: elastic
+    command:
+      - elasticsearch
+      - -Ecluster.name=potcluster
+      - -Enode.name=data02
+      - -Enode.master=false
+      - -Ediscovery.zen.ping.unicast.hosts=master01,master02,master03
+      - -Enetwork.host=_eth0_
+      - -Enode.max_local_storage_nodes=10
     ports:
-      - 9200:9200
-    networks:
-      - esnet
-  elasticsearch2:
-    image: docker.elastic.co/elasticsearch/elasticsearch:5.2.2
-    environment:
-      - cluster.name=docker-cluster
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      - "discovery.zen.ping.unicast.hosts=elasticsearch1"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-      nofile:
-        soft: 65536
-        hard: 65536
-    mem_limit: 1g
-    cap_add:
-      - IPC_LOCK
+      - "9202:9200"
     volumes:
       - esdata2:/usr/share/elasticsearch/data
-    networks:
-      - esnet
+  data03:
+    container_name: data03
+    extends:
+      file: common.yml
+      service: elastic
+    command:
+      -  elasticsearch
+      - -Ecluster.name=potcluster
+      - -Enode.name=data03
+      - -Enode.master=false
+      - -Ediscovery.zen.ping.unicast.hosts=master01,master02,master03
+      - -Enetwork.host=_eth0_
+      - -Enode.max_local_storage_nodes=10
+    ports:
+      - "9203:9200"
+    volumes:
+      - esdata3:/usr/share/elasticsearch/data
+  data04:
+    container_name: data04
+    extends:
+      file: common.yml
+      service: elastic
+    command:
+      -  elasticsearch
+      - -Ecluster.name=potcluster
+      - -Enode.name=data04
+      - -Enode.master=false
+      - -Ediscovery.zen.ping.unicast.hosts=master01,master02,master03
+      - -Enetwork.host=_eth0_
+      - -Enode.max_local_storage_nodes=10
+    ports:
+      - "9204:9200"
+    volumes:
+      - esdata4:/usr/share/elasticsearch/data
+  data05:
+    container_name: data05
+    extends:
+      file: common.yml
+      service: elastic
+    command:
+      -  elasticsearch
+      - -Ecluster.name=potcluster
+      - -Enode.name=data05
+      - -Enode.master=false
+      - -Ediscovery.zen.ping.unicast.hosts=master01,master02,master03
+      - -Enetwork.host=_eth0_
+      - -Enode.max_local_storage_nodes=10
+    volumes:
+      - esdata5:/usr/share/elasticsearch/data
+    ports:
+      - "9205:9200"
+  master01:
+    container_name: master01
+    extends:
+      file: common.yml
+      service: elastic
+    command:
+      - elasticsearch
+      - -Ecluster.name=potcluster
+      - -Enode.name=master01
+      - -Enode.data=false
+      - -Ediscovery.zen.ping.unicast.hosts=master02,master03
+      - -Ediscovery.zen.minimum_master_nodes=2
+      - -Enetwork.host=_eth0_
+      - -Enode.max_local_storage_nodes=10
+    ports:
+      - "9210:9200"
+  master02:
+    container_name: master02
+    extends:
+      file: common.yml
+      service: elastic
+    command:
+      - elasticsearch
+      - -Ecluster.name=potcluster
+      - -Enode.name=master02
+      - -Enode.data=false
+      - -Ediscovery.zen.ping.unicast.hosts=master01,master03
+      - -Ediscovery.zen.minimum_master_nodes=2
+      - -Enetwork.host=_eth0_
+      - -Enode.max_local_storage_nodes=10
+    ports:
+      - "9211:9200"
+  master03:
+    container_name: master03
+    extends:
+      file: common.yml
+      service: elastic
+    command:
+      - elasticsearch
+      - -Ecluster.name=potcluster
+      - -Enode.name=master03
+      - -Enode.data=false
+      - -Ediscovery.zen.ping.unicast.hosts=master01,master02
+      - -Ediscovery.zen.minimum_master_nodes=2
+      - -Enetwork.host=_eth0_
+      - -Enode.max_local_storage_nodes=10
+    ports:
+      - "9212:9200"
+  kibana:
+    container_name: kibana
+    extends:
+      file: common.yml
+      service: kibana
+    command: kibana serve -e 'http://elasticsearch:9200'
+    depends_on:
+      - elasticsearch
+    ports:
+      - "5601:5601"
 
 volumes:
   esdata1:
     driver: local
   esdata2:
+    driver: local
+  esdata3:
+    driver: local
+  esdata4:
+    driver: local
+  esdata5:
     driver: local
 
 networks:

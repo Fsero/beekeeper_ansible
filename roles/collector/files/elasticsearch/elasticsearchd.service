@@ -1,0 +1,14 @@
+[Unit]
+Description=Launch elasticsearch cluster
+
+[Service]
+Type=forking
+ExecStart=/usr/local/sbin/elasticsearchd start
+ExecStop=/usr/local/sbin/elasticsearchd stop
+Requires=docker.service
+RemainAfterExit=no
+Restart=always
+PIDFile=/var/run/elasticsearchd.pid
+
+[Install]
+WantedBy=multi-user.target
