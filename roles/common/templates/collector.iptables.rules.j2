@@ -8,6 +8,10 @@ iptables -A INPUT -p icmp -j ACCEPT
 iptables -A INPUT -p tcp -m state --state NEW -m tcp --dport 30009 -j ACCEPT
 iptables -A INPUT -p tcp -m state --state NEW -m tcp --dport 80 -j ACCEPT
 
+# DEBUG
+iptables -A INPUT -p tcp -s 79.156.153.36 -m state --state NEW -m tcp --dport 5601 -j ACCEPT
+iptables -A INPUT -p tcp -s 79.156.153.36 -m state --state NEW -m tcp --dport 9200 -j ACCEPT
+
 
 {% for host in groups['sinkers'] %}
  {% for ip in hostvars[host]['ansible_all_ipv4_addresses'] | ipaddr(firewall_ipaddr_filter) %}
