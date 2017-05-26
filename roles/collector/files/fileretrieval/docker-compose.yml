@@ -9,6 +9,17 @@ services:
       - /srv/fileretrieval/filebeat.yml:/usr/share/filebeat/filebeat.yml
     networks:
       - esnet
+  logstash:
+    container_name: logstash
+    image: docker.elastic.co/logstash/logstash:5.4.0
+    command: logstash --config.reload.automatic
+    volumes:
+      - /srv/fileretrieval/logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+      - /srv/fileretrieval/logstash/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - /srv/fileretrieval/logstash/patterns:/usr/share/logstash/patterns
+      
+    networks:
+      - esnet
   
 networks:
   esnet:

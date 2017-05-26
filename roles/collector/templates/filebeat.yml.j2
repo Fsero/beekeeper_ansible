@@ -6,5 +6,5 @@ filebeat.prospectors:
     - /mnt/log/{{hostvars[host]['ansible_hostname']}}/falco.log
 {% endfor %}
 
-output.elasticsearch:
-  hosts: ['elasticsearch:9200']
+output.logstash:
+  hosts: ['logstash:5043']

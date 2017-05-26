@@ -15,4 +15,5 @@ fileretrieval_files:
   - { src: '../files/fileretrieval/docker-compose.yml', dest: "{{fileretrieval_directory}}/docker-compose.yml", mode: '0444' }
   - { src: '../files/fileretrieval/fileretrievald', dest: '/usr/local/sbin/fileretrievald', mode: '0500' }
   - { src: '../files/fileretrieval/fileretrievald.service', dest: '/etc/systemd/system/fileretrievald.service', mode: '0444' }
+  - { src: '../files/fileretrieval/logstash', dest: "{{fileretrieval_directory}}", mode: '0555' }
 
