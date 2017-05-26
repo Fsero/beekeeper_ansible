@@ -1,0 +1,15 @@
+# {{ansible_managed}}
+{% for host in groups['sinkers'] %}
+ /var/log/{{hostvars[host]['ansible_hostname']}}/*
+{
+	rotate 7
+	daily
+	missingok
+	notifempty
+	delaycompress
+	compress
+	postrotate
+		invoke-rc.d rsyslog rotate > /dev/null
+	endscript
+}
+{% endfor %}

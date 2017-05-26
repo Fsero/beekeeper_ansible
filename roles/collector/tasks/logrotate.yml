@@ -1,0 +1,9 @@
+- name: installing remote syslog logrotate
+  template:
+    src: remote-syslog-logrotate.j2
+    dest: "/etc/logrotate.d/remote-rsylog"
+    owner: root
+    group: root
+    mode: 0440
+  when:  "'collector' in group_names"
+  tags: 'collector::logrotate'
