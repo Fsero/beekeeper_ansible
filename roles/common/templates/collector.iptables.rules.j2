@@ -7,9 +7,17 @@ iptables -A INPUT -i lo -j ACCEPT
 iptables -A INPUT -p icmp -j ACCEPT
 iptables -A INPUT -p tcp -m state --state NEW -m tcp --dport 30009 -j ACCEPT
 iptables -A INPUT -p tcp -m state --state NEW -m tcp --dport 80 -j ACCEPT
+
+
 {% for host in groups['sinkers'] %}
  {% for ip in hostvars[host]['ansible_all_ipv4_addresses'] | ipaddr(firewall_ipaddr_filter) %}
   iptables -A INPUT -p tcp -m state --state NEW -m tcp -s {{ ip }}/32 --dport 38080 -j ACCEPT
+  iptables -A INPUT -p tcp -m state --state NEW -m tcp -s {{ ip }}/32 --dport 10514 -j ACCEPT
+ {% endfor %}
+{% endfor %}
+{% for host in groups['pki'] %}
+ {% for ip in hostvars[host]['ansible_all_ipv4_addresses'] | ipaddr(firewall_ipaddr_filter) %}
+  iptables -A INPUT -p tcp -m state --state NEW -m tcp -s {{ ip }}/32 --dport 10514 -j ACCEPT
  {% endfor %}
 {% endfor %}
 iptables -A INPUT -p tcp -m state --state NEW -m tcp --dport 443 -j ACCEPT
