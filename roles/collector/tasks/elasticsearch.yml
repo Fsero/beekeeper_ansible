@@ -5,6 +5,13 @@
     mode: 0755
   tags: 'collector::elasticsearch'
 
+- name: 'increase vm.max_map count'
+  sysctl:
+    name: vm.max_map_count
+    value: 262144
+    state: present
+  tags: 'collector::elasticsearch'
+
 - name: 'setting up elasticsearch cluster'
   copy:
       src: "{{ item.src }}"
@@ -24,7 +31,11 @@
   tags: 'collector::elasticsearch'
 
 - name: 'reloading elasticsearch service'
-  command: /usr/local/sbin/elasticsearchd stop
+  systemd:
+    state: restarted
+    name: elasticsearchd
+    daemon_reload: yes
+    enabled: yes
   when: elasticsearch_restart | default("false") | match("true")
   tags: 'collector::elasticsearch'
 

@@ -68,40 +68,40 @@ services:
       - "9203:9200"
     volumes:
       - esdata3:/usr/share/elasticsearch/data
-  data04:
-    container_name: data04
-    extends:
-      file: common.yml
-      service: elastic
-    command:
-      -  elasticsearch
-      - -Ecluster.name=potcluster
-      - -Enode.name=data04
-      - -Enode.master=false
-      - -Ediscovery.zen.ping.unicast.hosts=master01,master02,master03
-      - -Enetwork.host=_eth0_
-      - -Enode.max_local_storage_nodes=10
-    ports:
-      - "9204:9200"
-    volumes:
-      - esdata4:/usr/share/elasticsearch/data
-  data05:
-    container_name: data05
-    extends:
-      file: common.yml
-      service: elastic
-    command:
-      -  elasticsearch
-      - -Ecluster.name=potcluster
-      - -Enode.name=data05
-      - -Enode.master=false
-      - -Ediscovery.zen.ping.unicast.hosts=master01,master02,master03
-      - -Enetwork.host=_eth0_
-      - -Enode.max_local_storage_nodes=10
-    volumes:
-      - esdata5:/usr/share/elasticsearch/data
-    ports:
-      - "9205:9200"
+  # data04:
+  #   container_name: data04
+  #   extends:
+  #     file: common.yml
+  #     service: elastic
+  #   command:
+  #     -  elasticsearch
+  #     - -Ecluster.name=potcluster
+  #     - -Enode.name=data04
+  #     - -Enode.master=false
+  #     - -Ediscovery.zen.ping.unicast.hosts=master01,master02,master03
+  #     - -Enetwork.host=_eth0_
+  #     - -Enode.max_local_storage_nodes=10
+  #   ports:
+  #     - "9204:9200"
+  #   volumes:
+  #     - esdata4:/usr/share/elasticsearch/data
+  # data05:
+  #   container_name: data05
+  #   extends:
+  #     file: common.yml
+  #     service: elastic
+  #   command:
+  #     -  elasticsearch
+  #     - -Ecluster.name=potcluster
+  #     - -Enode.name=data05
+  #     - -Enode.master=false
+  #     - -Ediscovery.zen.ping.unicast.hosts=master01,master02,master03
+  #     - -Enetwork.host=_eth0_
+  #     - -Enode.max_local_storage_nodes=10
+  #   volumes:
+  #     - esdata5:/usr/share/elasticsearch/data
+  #   ports:
+  #     - "9205:9200"
   master01:
     container_name: master01
     extends:
@@ -168,10 +168,10 @@ volumes:
     driver: local
   esdata3:
     driver: local
-  esdata4:
-    driver: local
-  esdata5:
-    driver: local
+  # esdata4:
+  #   driver: local
+  # esdata5:
+  #   driver: local
 
 networks:
   esnet:
