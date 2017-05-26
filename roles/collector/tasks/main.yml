@@ -3,6 +3,8 @@
 - include: sysdig.yml
 - include: elasticsearch.yml
 - include: logrotate.yml
+- include: fileretrieval.yml
+
 
 
 

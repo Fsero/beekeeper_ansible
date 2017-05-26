@@ -1,0 +1,75 @@
+- name: 'create fileretrieval folder'
+  file:
+    path: "{{ fileretrieval_directory }}"
+    state: directory
+    mode: 0755
+  tags: 'collector::fileretrieval'
+
+- name: generating filebeat config
+  template:
+    src: filebeat.yml.j2
+    dest: "{{fileretrieval_directory}}/filebeat.yml"
+    owner: root
+    group: root
+    mode: 0444
+  tags: 'collector::fileretrieval'
+
+- name: granting file user access to logs via acl
+  acl:
+    path: /var/log
+    entity: 1000
+    etype: group
+    permissions: rx
+    default: yes
+    state: present
+    recursive: yes
+  tags: 'collector::fileretrieval'
+
+- name: granting file user access to logs 
+  acl:
+    path: /var/log
+    entity: 1000
+    etype: group
+    permissions: rx
+    state: present
+    recursive: yes
+  tags: 'collector::fileretrieval'
+
+- name: granting file user access to logs via acl
+  acl:
+    path: /var/log
+    entity: file
+    etype: user
+    permissions: r
+    default: yes
+    state: present
+    recursive: yes
+  tags: 'collector::fileretrieval'
+
+- name: 'setting up fileretrieval'
+  copy:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      owner: root
+      group: root
+      mode: "{{ item.mode }}"
+  with_items: "{{fileretrieval_files}}"
+  tags: 'collector::fileretrieval'
+  
+- name: 'starting up fileretrievald'
+  systemd:
+    state: started
+    name: fileretrievald
+    daemon_reload: yes
+    enabled: yes
+  tags: 'collector::fileretrieval'
+
+- name: 'reloading fileretrieval service'
+  systemd:
+    state: restarted
+    name: fileretrievald
+    daemon_reload: yes
+    enabled: yes
+  when: fileretrieval_restart | default("false") | match("true")
+  tags: 'collector::fileretrieval'
+

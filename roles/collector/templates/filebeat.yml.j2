@@ -1,0 +1,10 @@
+# {{ansible_managed}}
+filebeat.prospectors:
+- input_type: log
+  paths:
+{% for host in groups['sinkers'] %}
+    - /mnt/log/{{hostvars[host]['ansible_hostname']}}/*
+{% endfor %}
+
+output.elasticsearch:
+  hosts: ['elasticsearch:9200']

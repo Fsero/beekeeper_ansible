@@ -1,0 +1,14 @@
+[Unit]
+Description=Launch fileretrieval 
+
+[Service]
+Type=forking
+ExecStart=/usr/local/sbin/fileretrievald start
+ExecStop=/usr/local/sbin/fileretrievald stop
+Requires=docker.service
+RemainAfterExit=no
+Restart=always
+PIDFile=/var/run/fileretrievald.pid
+
+[Install]
+WantedBy=multi-user.target

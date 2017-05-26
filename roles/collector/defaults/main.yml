@@ -2,10 +2,17 @@
 sysdig_repo_key_url: "https://s3.amazonaws.com/download.draios.com/DRAIOS-GPG-KEY.public"
 sysdig_repo_key_id: "EC51E8C4"
 
-elasticsearch_directory: "/var/run/services/elasticsearch"
+elasticsearch_directory: "/srv/elasticsearch"
 elasticsearch_files:
   - { src: '../files/elasticsearch/docker-compose.yml', dest: "{{elasticsearch_directory}}/docker-compose.yml", mode: '0444' }
   - { src: '../files/elasticsearch/common.yml', dest: "{{elasticsearch_directory}}/common.yml", mode: '0444' }
   - { src: '../files/elasticsearch/elasticsearchd', dest: '/usr/local/sbin/elasticsearchd', mode: '0500' }
   - { src: '../files/elasticsearch/elasticsearchd.service', dest: '/etc/systemd/system/elasticsearchd.service', mode: '0444' }
+
+
+fileretrieval_directory: "/srv/fileretrieval"
+fileretrieval_files:
+  - { src: '../files/fileretrieval/docker-compose.yml', dest: "{{fileretrieval_directory}}/docker-compose.yml", mode: '0444' }
+  - { src: '../files/fileretrieval/fileretrievald', dest: '/usr/local/sbin/fileretrievald', mode: '0500' }
+  - { src: '../files/fileretrieval/fileretrievald.service', dest: '/etc/systemd/system/fileretrievald.service', mode: '0444' }
 

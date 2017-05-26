@@ -1,0 +1,16 @@
+version: "2"
+
+services:
+  filebeat:
+    container_name: filebeat
+    image: docker.elastic.co/beats/filebeat:5.4.0
+    volumes:
+      - /var/log:/mnt/log
+      - /srv/fileretrieval/filebeat.yml:/usr/share/filebeat/filebeat.yml
+    networks:
+      - esnet
+  
+networks:
+  esnet:
+    external:
+      name: elasticsearch_esnet
