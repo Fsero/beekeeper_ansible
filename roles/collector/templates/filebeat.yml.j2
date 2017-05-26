@@ -3,7 +3,7 @@ filebeat.prospectors:
 - input_type: log
   paths:
 {% for host in groups['sinkers'] %}
-    - /mnt/log/{{hostvars[host]['ansible_hostname']}}/*
+    - /mnt/log/{{hostvars[host]['ansible_hostname']}}/falco.log
 {% endfor %}
 
 output.elasticsearch:
