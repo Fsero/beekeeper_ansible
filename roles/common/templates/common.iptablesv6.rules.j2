@@ -2,8 +2,8 @@
 
 ip6tables -P INPUT DROP
 ip6tables -P FORWARD DROP
-ip6tables -P OUTPUT DROP
-
+# we allow ipv6 output for updates
+ip6tables -P OUTPUT ACCEPT
 
 # Allow localhost traffic. This rule is for all protocols.
 
