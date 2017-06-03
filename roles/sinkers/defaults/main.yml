@@ -6,6 +6,7 @@ sysdig_files:
   - { src: '../files/sysdigd', dest: '/usr/local/sbin/sysdigd', mode: '0500' }
   - { src: '../files/cleanup_traces.sh', dest: '/usr/local/sbin/cleanup_traces.sh', mode: '0500' }
   - { src: '../files/sysdigd.service', dest: '/etc/systemd/system/sysdigd.service', mode: '0444' }
+  - { src: '../files/modified_sysdig_chisel/spy_users.lua', dest: '/usr/share/sysdig/chisels/spy_users.lua', mode: '0444' }
 
 falco_files:
   - { src: '../files/falco.yaml', dest: '/etc/falco.yaml', mode: '0444' }
