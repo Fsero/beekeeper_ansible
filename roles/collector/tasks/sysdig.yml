@@ -26,4 +26,12 @@
   become: yes
   command: sysdig-probe-loader
   tags: 'sinkers::sysdig'
-
+- name: 'setting up sysdig as a service'
+  copy:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      owner: root
+      group: root
+      mode: "{{ item.mode }}"
+  tags: 'sinkers::sysdig'
+  with_items: "{{sysdig_files}}"

@@ -17,3 +17,5 @@ fileretrieval_files:
   - { src: '../files/fileretrieval/fileretrievald.service', dest: '/etc/systemd/system/fileretrievald.service', mode: '0444' }
   - { src: '../files/fileretrieval/logstash', dest: "{{fileretrieval_directory}}", mode: '0555' }
 
+sysdig_files:
+   - { src: '../files/modified_sysdig_chisel/spy_users.lua', dest: '/usr/share/sysdig/chisels/spy_users.lua', mode: '0444' }
