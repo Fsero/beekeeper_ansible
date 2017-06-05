@@ -38,7 +38,7 @@ args =
 
 require "common"
 terminal = require "ansiterminal"
-terminal.enable_color(true)
+terminal.enable_color(false)
 
 MAX_ANCESTOR_NAVIGATION = 16
 max_depth = -1
