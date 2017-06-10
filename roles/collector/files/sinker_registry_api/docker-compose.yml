@@ -1,0 +1,16 @@
+version: "2"
+
+services:
+  sinker_registry_api:
+    build:
+      context: . #current dir as build context
+    image: sinker_registry_api
+    ports:
+      - "172.17.0.1:38080:38080"
+    container_name: sinker_registry_api
+    networks:
+      - api_net
+
+networks:
+  api_net:
+    driver: bridge

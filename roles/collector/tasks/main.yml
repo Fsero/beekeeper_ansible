@@ -4,6 +4,8 @@
 - include: elasticsearch.yml
 - include: logrotate.yml
 - include: fileretrieval.yml
+- include: sinkerregistryapi.yml
+
 
 
 

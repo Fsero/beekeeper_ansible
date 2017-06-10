@@ -1,0 +1,14 @@
+[Unit]
+Description=Launch sinkerregistryapi 
+
+[Service]
+Type=forking
+ExecStart=/usr/local/sbin/sinkerregistryapid start
+ExecStop=/usr/local/sbin/sinkerregistryapid stop
+Requires=docker.service
+RemainAfterExit=no
+Restart=always
+PIDFile=/var/run/sinkerregistryapid.pid
+
+[Install]
+WantedBy=multi-user.target
