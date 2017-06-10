@@ -16,7 +16,7 @@ services:
       - -Enetwork.host=_eth0_
       - -Enode.max_local_storage_nodes=10
     ports:
-      - "9200:9200"
+      - "172.17.0.1:9200:9200"
   data01:
     container_name: data01
     extends:
@@ -31,7 +31,7 @@ services:
       - -Enetwork.host=_eth0_
       - -Enode.max_local_storage_nodes=10
     ports:
-      - "9201:9200"
+      - "172.17.0.1:9201:9200"
     volumes:
       - esdata1:/usr/share/elasticsearch/data
   data02:
@@ -48,7 +48,7 @@ services:
       - -Enetwork.host=_eth0_
       - -Enode.max_local_storage_nodes=10
     ports:
-      - "9202:9200"
+      - "172.17.0.1:9202:9200"
     volumes:
       - esdata2:/usr/share/elasticsearch/data
   data03:
@@ -65,7 +65,7 @@ services:
       - -Enetwork.host=_eth0_
       - -Enode.max_local_storage_nodes=10
     ports:
-      - "9203:9200"
+      - "172.17.0.1:9203:9200"
     volumes:
       - esdata3:/usr/share/elasticsearch/data
   # data04:
@@ -117,7 +117,7 @@ services:
       - -Enetwork.host=_eth0_
       - -Enode.max_local_storage_nodes=10
     ports:
-      - "9210:9200"
+      - "172.17.0.1:9210:9200"
   master02:
     container_name: master02
     extends:
@@ -133,7 +133,7 @@ services:
       - -Enetwork.host=_eth0_
       - -Enode.max_local_storage_nodes=10
     ports:
-      - "9211:9200"
+      - "172.17.0.1:9211:9200"
   master03:
     container_name: master03
     extends:
@@ -149,7 +149,7 @@ services:
       - -Enetwork.host=_eth0_
       - -Enode.max_local_storage_nodes=10
     ports:
-      - "9212:9200"
+      - "172.17.0.1:9212:9200"
   kibana:
     container_name: kibana
     extends:
@@ -159,7 +159,7 @@ services:
     depends_on:
       - elasticsearch
     ports:
-      - "5601:5601"
+      - "172.17.0.1:5601:5601"
 
 volumes:
   esdata1:
