@@ -1,5 +1,5 @@
 - stat:
-    path: "{{ role_path }}/files/sinker_registry_api/gocode"
+    path: "{{ role_path }}/files/sinkerregistryapi/gocode"
   register: gocode_folder
   delegate_to: 127.0.0.1
   become: false
@@ -7,7 +7,7 @@
 
 - name: 'create gocode folder'
   file:
-    path: "{{ role_path }}/files/sinker_registry_api/gocode"
+    path: "{{ role_path }}/files/sinkerregistryapi/gocode"
     state: directory
   when: gocode_folder.stat.isdir is not defined 
   delegate_to: 127.0.0.1
@@ -16,7 +16,7 @@
 
 - name: 'create path'
   file:
-    path: "{{ role_path }}/files/sinker_registry_api/gocode/src/bitbucket.org/fseros/"
+    path: "{{ role_path }}/files/sinkerregistryapi/gocode/src/bitbucket.org/fseros/"
     recurse: "yes"
     state: directory
   when: gocode_folder.stat.isdir is not defined
@@ -27,7 +27,7 @@
 - name: 'get sinker_registry_api repo'
   git:
       repo: 'git@bitbucket.org:fseros/sinker_registry_api.git'
-      dest: "{{ role_path }}/files/sinker_registry_api/gocode/src/bitbucket.org/fseros/sinker_registry_api"
+      dest: "{{ role_path }}/files/sinkerregistryapi/gocode/src/bitbucket.org/fseros/sinker_registry_api"
       ssh_opts: "-o StrictHostKeyChecking=no"
       version: 0.0.1    
   when: gocode_folder.stat.isdir is not defined 
@@ -35,17 +35,27 @@
   delegate_to: 127.0.0.1
   tags: 'collector::sinkersapi'
 
-- name: 'get golang compiler'
-  include_role:
-        name: ansible-go
-  become: true
+- name: 'compress sinker_registry_api repo'
+  archive:
+    path: "{{ role_path }}/files/sinkerregistryapi/gocode"
+    dest: "{{ role_path }}/files/sinkerregistryapi/gocode.tgz"
+  become: false
   delegate_to: 127.0.0.1
   tags: 'collector::sinkersapi'
 
-- name: 'pack application'
-  shell: "export GOPATH={{ role_path }}/files/sinker_registry_api/gocode/; cd $GOPATH/src/bitbucket.org/fseros/sinker_registry_api && glide install && bee pack "
-  become: false
+- name: 'delete gocode folder'
+  file:
+    path: "{{ role_path }}/files/sinkerregistryapi/gocode"
+    state: absent
   delegate_to: 127.0.0.1
+  become: false
+  tags: 'collector::sinkersapi'
+
+- name: 'create fileretrieval folder'
+  file:
+    path: "{{ sinkerregistryapi_directory }}"
+    state: directory
+    mode: 0755
   tags: 'collector::sinkersapi'
 
 - name: 'setting up sinkerapi'
@@ -55,5 +65,29 @@
       owner: root
       group: root
       mode: "{{ item.mode }}"
-  with_items: "{{sinkerapi_files}}"
-  tags: 'collector::sinkerapi'
+  with_items: "{{sinkerregistryapi_files}}"
+  tags: 'collector::sinkersapi'
+
+- name: "unpacking gocode"
+  unarchive:
+    src: "{{ sinkerregistryapi_directory }}/gocode.tgz"
+    dest: "{{ sinkerregistryapi_directory }}"
+    remote_src: True
+  tags: 'collector::sinkersapi'
+
+- name: 'starting up sinkerregistryapid'
+  systemd:
+    state: started
+    name: sinkerregistryapid
+    daemon_reload: yes
+    enabled: yes
+  tags: 'collector::sinkersapi'
+
+- name: 'reloading sinkerregistryapi service'
+  systemd:
+    state: restarted
+    name: sinkerregistryapid
+    daemon_reload: yes
+    enabled: yes
+  when: sinkerregistryapi_restart | default("false") | match("true")
+  tags: 'collector::sinkersapi'

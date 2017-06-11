@@ -1,0 +1,115 @@
+
+- name: Generate SSH key for host CA
+  shell: "ssh-keygen -N '' -f /etc/ssh/{{ssh_ca_filename}} -q "
+  args:
+    creates: /etc/ssh/{{ssh_ca_filename}}
+  when: "ssh_ca_host in group_names"
+  tags: 'common::hostsca'
+  
+- name: 'fetching SSH CA pub key'
+  fetch:
+    src: /etc/ssh/{{ssh_ca_filename}}.pub
+    flat: yes
+    dest: "{{inventory_dir}}/storage/ssh_keys/{{ssh_ca_filename}}.pub"
+  tags: 'common::hostsca'
+  
+
+- name: 'fetching ssh RSA host keys'
+  fetch:
+    src: /etc/ssh/ssh_host_rsa_key.pub
+    dest: "{{inventory_dir}}/storage/ssh_keys/"
+  tags: 'common::hostsca'
+  
+
+- name: 'copying SSH RSA hosts files into PKI host'
+  copy:
+    src: "{{inventory_dir}}/storage/ssh_keys/{{item}}/etc/ssh/ssh_host_rsa_key.pub"
+    dest: /etc/ssh/ssh_{{item}}_rsa_key.pub
+    owner: root
+    group: root
+    mode: 0644
+  when: "ssh_ca_host in group_names"
+  with_items: "{{play_hosts}}"
+  tags: 'common::hostsca'
+  
+
+- name: 'Signing Hosts keys'
+  shell: "ssh-keygen -s /etc/ssh/{{ssh_ca_filename}} -I host_{{item}} -h -n {{ hostvars[item]['hostname'] }} -V +52w /etc/ssh/ssh_{{item}}_rsa_key.pub"
+  args:
+    creates: "/etc/ssh/ssh_{{item}}_rsa_key-cert.pub"
+  with_items: "{{play_hosts}}"
+  when: "ssh_ca_host in group_names"
+  tags: 'common::hostsca'
+  
+
+- name: 'fetching signed hosts CA ssh keys'
+  fetch:
+      src: "/etc/ssh/ssh_{{item}}_rsa_key-cert.pub"
+      dest: "{{inventory_dir}}/storage/ssh_signed_host_keys/"
+      flat: yes
+  when: "ssh_ca_host in group_names"
+  with_items: "{{play_hosts}}"
+  tags: 'common::hostsca'
+  
+
+- name: 'reading signed hosts keys to  add to global known hosts'
+  shell: cat {{item}}
+  with_fileglob:
+    - "{{inventory_dir}}/storage/ssh_keys/{{ssh_ca_filename}}.pub"
+  delegate_to: 127.0.0.1
+  delegate_facts: True
+  register: data
+  tags: 'common::hostsca'
+  
+
+- name: 'removing local ssh known hosts'
+  file:
+      name: '{{item}}/.ssh/known_hosts'
+      state: absent
+  with_items:
+    - "{{ ansible_env.HOME}}"
+    - "/root"
+  tags: 'common::hostsca'
+  
+
+- name: 'adding signed hosts key to global known hosts'
+  blockinfile:
+    name: /etc/ssh/ssh_known_hosts
+    create: yes
+    insertafter: 'EOF'
+    owner: root
+    group: root
+    mode: 0644
+    block: |
+      @cert-authority {{ssh_ca_domain}} {{ item.stdout }}
+    marker: "# {mark} ANSIBLE MANAGED BLOCK {{item.item|basename}}"
+  with_items:
+    - "{{data.results}}"
+  tags: 'common::hostsca'
+  
+
+- name: 'copying signed hosts key in servers'
+  copy:
+    src: "{{inventory_dir}}/storage/ssh_signed_host_keys/ssh_{{item}}_rsa_key-cert.pub"
+    dest: /etc/ssh/ssh_host_rsa_key-cert.pub
+    owner: root
+    group: root
+    mode: 0644
+  when: inventory_hostname == item
+  with_items: "{{play_hosts}}"
+  tags: 'common::hostsca'
+  
+
+- name: 'adding config'
+  lineinfile:
+    name: /etc/ssh/sshd_config
+    regexp: '^HostCertificate /etc/ssh/ssh_host_rsa_key-cert.pub'
+    insertafter: 'EOF'
+    line: 'HostCertificate /etc/ssh/ssh_host_rsa_key-cert.pub'
+  notify:
+    - restart sshd
+  tags: 'common::hostsca'
+
+
+
+

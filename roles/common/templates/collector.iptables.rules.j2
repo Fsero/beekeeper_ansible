@@ -7,24 +7,43 @@ iptables -A INPUT -i lo -j ACCEPT
 iptables -A INPUT -p icmp -j ACCEPT
 iptables -A INPUT -p tcp -m state --state NEW -m tcp --dport 30009 -j ACCEPT
 iptables -A INPUT -p tcp -m state --state NEW -m tcp --dport 80 -j ACCEPT
-
+iptables -A INPUT -p tcp -m state --state NEW -m tcp --dport 443 -j ACCEPT
 # DEBUG
 iptables -A INPUT -p tcp -s 79.156.153.36 -m state --state NEW -m tcp --dport 5601 -j ACCEPT
 iptables -A INPUT -p tcp -s 79.156.153.36 -m state --state NEW -m tcp --dport 9200 -j ACCEPT
+iptables -A INPUT -p tcp -s 79.156.153.36 -m state --state NEW -m tcp --dport 38080 -j ACCEPT
+
+{% if  'vm.localhost' in inventory_hostname %}
+iptables -A INPUT -p tcp -s 10.0.2.2 -m state --state NEW -m tcp --dport 5601 -j ACCEPT
+iptables -A INPUT -p tcp -s 10.0.2.2 -m state --state NEW -m tcp --dport 9200 -j ACCEPT
+iptables -A INPUT -p tcp -s 10.0.2.2 -m state --state NEW -m tcp --dport 38080 -j ACCEPT
 iptables -t nat -A PREROUTING -p tcp -i eth0 --dport 5601 --jump DNAT --to-destination 172.17.0.1:5601
 iptables -t nat -A PREROUTING -p tcp -i eth0 --dport 9200 --jump DNAT --to-destination 172.17.0.1:9200
+iptables -t nat -A PREROUTING -p tcp -i eth0 --dport 38080 --jump DNAT --to-destination 172.17.0.1:38080
+{% endif %}
 
+{% for interface in hostvars[inventory_hostname]['ansible_interfaces'] %}
+{% set iface = hostvars[inventory_hostname]['ansible_' + interface |replace("-", "_") ] %}
+{% if ( iface['type'] == 'ether') and ( iface['ipv4'] is defined )  and ( iface['ipv4']['address'] is defined ) and ( iface['ipv4']['address'] | ipaddr(firewall_ipaddr_filter) ) %}
+iptables -t nat -A PREROUTING -p tcp -i {{iface['device']}} --dport 5601 --jump DNAT --to-destination 172.17.0.1:5601
+iptables -t nat -A PREROUTING -p tcp -i {{iface['device']}} --dport 9200 --jump DNAT --to-destination 172.17.0.1:9200
+iptables -t nat -A PREROUTING -p tcp -i {{iface['device']}} --dport 38080 --jump DNAT --to-destination 172.17.0.1:38080
+iptables -A INPUT -p tcp -m state --state NEW -m tcp -s {{ iface['ipv4']['address'] }}/32 --dport 38080 -j ACCEPT
+iptables -A INPUT -p tcp -m state --state NEW -m tcp -s {{ iface['ipv4']['address'] }}/32 --dport 10514 -j ACCEPT
+iptables -A INPUT -p tcp -m state --state NEW -m tcp -s {{ iface['ipv4']['address'] }}/32 --dport 9200 -j ACCEPT
+iptables -A INPUT -p tcp -m state --state NEW -m tcp -s {{ iface['ipv4']['address'] }}/32 --dport 5601 -j ACCEPT
+{% endif %}
+{% endfor %}
 {% for host in groups['sinkers'] %}
- {% for ip in hostvars[host]['ansible_all_ipv4_addresses'] | ipaddr(firewall_ipaddr_filter) %}
-  iptables -A INPUT -p tcp -m state --state NEW -m tcp -s {{ ip }}/32 --dport 38080 -j ACCEPT
-  iptables -A INPUT -p tcp -m state --state NEW -m tcp -s {{ ip }}/32 --dport 10514 -j ACCEPT
- {% endfor %}
+{% for ip in hostvars[host]['ansible_all_ipv4_addresses'] | ipaddr(firewall_ipaddr_filter) %}
+iptables -A INPUT -p tcp -m state --state NEW -m tcp -s {{ ip }}/32 --dport 38080 -j ACCEPT
+iptables -A INPUT -p tcp -m state --state NEW -m tcp -s {{ ip }}/32 --dport 10514 -j ACCEPT
+{% endfor %}
 {% endfor %}
 {% for host in groups['pki'] %}
- {% for ip in hostvars[host]['ansible_all_ipv4_addresses'] | ipaddr(firewall_ipaddr_filter) %}
-  iptables -A INPUT -p tcp -m state --state NEW -m tcp -s {{ ip }}/32 --dport 10514 -j ACCEPT
- {% endfor %}
+{% for ip in hostvars[host]['ansible_all_ipv4_addresses'] | ipaddr(firewall_ipaddr_filter) %}
+iptables -A INPUT -p tcp -m state --state NEW -m tcp -s {{ ip }}/32 --dport 10514 -j ACCEPT
 {% endfor %}
-iptables -A INPUT -p tcp -m state --state NEW -m tcp --dport 443 -j ACCEPT
+{% endfor %}
 iptables -A INPUT -j REJECT --reject-with icmp-host-prohibited 
 iptables -A FORWARD -j REJECT --reject-with icmp-host-prohibited

@@ -8,7 +8,15 @@
 #   ansible-playbook vars.yml -e 'hosts=localhost'
 #
 
+
+# - hosts: "*"
+#   tasks: 
+#     - set_fact:
+#         ansible_ethernet_interfaces: "{% set ansible_eth = ansible_eth|default([]) + [hostvars[inventory_hostname]['ansible_' + item]] %}{{ ansible_eth|list }}"
+#       when: hostvars[inventory_hostname]['ansible_' + item]['type'] == 'ether'
+#       with_items:
+#         - "{{ hostvars[inventory_hostname]['ansible_interfaces'] }}"
+
 - hosts: "*"
   tasks:
-    - debug: var=vars
     - debug: var=hostvars[inventory_hostname]
