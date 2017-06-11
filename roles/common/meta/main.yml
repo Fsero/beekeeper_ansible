@@ -3,3 +3,4 @@ dependencies:
   - role: ansible-rsyslog
     become: true
     when: ansible_os_family == 'Debian'
+    notify: restart rsyslog

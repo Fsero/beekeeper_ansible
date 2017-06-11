@@ -49,7 +49,7 @@
         src: "/home/file/.ssh/id_rsa.pub"
         dest: "{{inventory_dir}}/storage/file_ssh_keys/"
         flat: yes
-    when: "'{{traces_collector_host}}' in group_names"
+    when: "traces_collector_host in group_names"
 
   - name: Set authorized key
     authorized_key:

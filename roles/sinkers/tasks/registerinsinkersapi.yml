@@ -1,5 +1,5 @@
 - name: 'register new sinker in api'
-   uri:
+  uri:
     url: "{{sinker_registry_api_url}}}/v1/probe/"
     method: POST
     #user: your_username
@@ -7,4 +7,3 @@
     body: "{{ lookup('template', 'sinker_registry_apy_payload.json.j2') }}"
     body_format: "json"
     status_code: 201
-    body_format: json
