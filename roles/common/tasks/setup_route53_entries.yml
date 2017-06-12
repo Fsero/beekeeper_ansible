@@ -10,7 +10,7 @@
       ttl: "300"
       value: "{{ ansible_host }}" 
       wait: "yes" 
-  when: "{{ ansible_all_ipv4_addresses |  ipaddr('public') }}"
+  when: "ansible_all_ipv4_addresses |  ipaddr('public')"
   become: false
   delegate_to: 127.0.0.1
   tags: 'common::route53'
