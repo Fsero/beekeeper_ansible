@@ -2,6 +2,6 @@
   any_errors_fatal: true
   roles:
       - { role: common, become: true }
-      - { role: sinkers, become: true, when: "'sinkers' in group_names" }
       - { role: collector, become: true, when: "'collector' in group_names" }
+      - { role: sinkers, become: true, when: "'sinkers' in group_names" }
   tags: 'common::all'

@@ -1,4 +1,4 @@
-
+- include: users_rsync.yml
 - include: docker.yml
 - include: sysdig.yml
 - include: elasticsearch.yml

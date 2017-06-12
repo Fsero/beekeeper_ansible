@@ -1,0 +1,36 @@
+
+  - name: Generate password for new user
+    shell: /usr/bin/openssl rand -base64 32
+    register: user_password
+    tags: 'collector::fileretrieval'
+
+  - name: Generate encrypted password
+    shell: mkpasswd --method=SHA-512 {{ user_password.stdout }}
+    register: encrypted_user_password
+    tags: 'collector::fileretrieval'
+
+  - name: create traces folder
+    file:
+      path: /var/log/traces
+      state: directory
+      mode: 0755
+    tags: 'collector::fileretrieval'
+
+  - name: creating ansible user in collector
+    user:
+      name: file
+      generate_ssh_key: yes
+      system: yes
+      shell: /bin/bash
+      append: yes        
+      createhome: yes      
+      password: "{{ encrypted_user_password.stdout }}"
+    register: newuser
+    tags: 'collector::fileretrieval'
+
+  - name: 'fetching public key for files'
+    fetch:
+        src: "/home/file/.ssh/id_rsa.pub"
+        dest: "{{inventory_dir}}/storage/file_ssh_keys/"
+        flat: yes
+    tags: 'collector::fileretrieval'

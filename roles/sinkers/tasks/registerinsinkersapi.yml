@@ -4,10 +4,13 @@
     method: POST
     #user: your_username
     #password: your_pass
-    body: "{{ lookup('template', 'sinker_registry_apy_payload.json.j2') }}"
+    body: "{{ lookup('template', 'sinker_registry_api_payload.json.j2') }}"
     body_format: "json"
     status_code: 201
+    return_content: yes
   tags: 'sinkers::register'
+  register: probeid
+
 
 - name: debug
   debug: var="{{ lookup('template', 'sinker_registry_apy_payload.json.j2') }}"

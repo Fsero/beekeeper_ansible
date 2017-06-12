@@ -30,6 +30,17 @@
       password: "{{ encrypted_user_password.stdout }}"
     register: newuser
     when: "'sinkers' in group_names"
+  
+  - name: 'register sinkers ssh keys in api'
+  uri:
+    url: "{{sinker_registry_api_url}}v1/probe/"
+    method: POST
+    #user: your_username
+    #password: your_pass
+    body: "{{ lookup('template', 'sinker_registry_apy_payload.json.j2') }}"
+    body_format: "json"
+    status_code: 201
+    tags: 'sinkers::register'
             
             
   - name: creating ansible user in collector
