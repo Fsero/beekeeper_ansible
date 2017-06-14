@@ -4,5 +4,7 @@
     "ipv4": "{{ip}}",
     {% endfor %}
     "provider": "{{hostvars[inventory_hostname]['provider']}}",
+    "sshpublickey": "{{sshpublickey}},
+    "sshprivatekey": "{{sshprivatekey}},
     "enabled": true
 }

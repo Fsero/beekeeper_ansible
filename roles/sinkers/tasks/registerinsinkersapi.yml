@@ -1,3 +1,38 @@
+
+- name: 'get public key'
+  slurp:
+    src: /var/log/traces/.ssh/id_rsa.pub
+  register: sshpublickey
+  tags: 'sinkers::register'
+
+- name: 'get private key'
+  slurp:
+    src: /var/log/traces/.ssh/id_rsa
+  register: sshprivatekey
+  tags: 'sinkers::register'
+
+- name: debug
+  debug: var="sshpublickey"
+  tags: 'sinkers::register'
+
+- name: debug
+  debug: var="sshprivatekey"
+
+- name: check if sinker is already registered
+  uri:
+    url: "{{sinker_registry_api_url}}v1/probe/ip/{{ (hostvars[inventory_hostname]['ansible_all_ipv4_addresses'] | ipaddr(firewall_ipaddr_filter))[0] }}"
+    method: GET
+    #user: your_username
+    #password: your_pass   
+    status_code: 200
+    return_content: yes
+  tags: 'sinkers::register'
+  register: probeid
+
+- name: debug
+  debug: var="probeid"
+  tags: 'sinkers::register'
+
 - name: 'register new sinker in api'
   uri:
     url: "{{sinker_registry_api_url}}v1/probe/"
@@ -8,10 +43,10 @@
     body_format: "json"
     status_code: 201
     return_content: yes
+  when: (probeid is none) or (probeid | trim == '')
   tags: 'sinkers::register'
   register: probeid
 
-
 - name: debug
-  debug: var="{{ lookup('template', 'sinker_registry_apy_payload.json.j2') }}"
+  debug: var="probeid['json']"
   tags: 'sinkers::register'
