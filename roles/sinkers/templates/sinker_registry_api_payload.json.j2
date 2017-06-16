@@ -1,10 +1,10 @@
 {
-	"fqdn": "{{hostvars[inventory_hostname]['hostname']}}",
-    {% for ip in hostvars[inventory_hostname]['ansible_all_ipv4_addresses'] | ipaddr(firewall_ipaddr_filter) %}
-    "ipv4": "{{ip}}",
+    'fqdn': '{{hostvars[inventory_hostname]['hostname']}}',
+    {% for ip in hostvars[inventory_hostname]['ansible_all_ipv4_addresses'] | ipaddr(firewall_ipaddr_filter) -%}
+    'ipv4': '{{ip}}',
     {% endfor %}
-    "provider": "{{hostvars[inventory_hostname]['provider']}}",
-    "sshpublickey": "{{sshpublickey}},
-    "sshprivatekey": "{{sshprivatekey}},
-    "enabled": true
+    'provider': '{{hostvars[inventory_hostname]['provider']}}',
+    'sshpublickey': '{{sshpublickey['content'] | safe }}',
+    'sshprivatekey': '{{sshprivatekey['content'] | safe }}',
+    'enabled': true
 }

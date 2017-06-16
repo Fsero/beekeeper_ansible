@@ -11,12 +11,12 @@
   register: sshprivatekey
   tags: 'sinkers::register'
 
-- name: debug
-  debug: var="sshpublickey"
-  tags: 'sinkers::register'
+# - name: debug
+#   debug: var="sshpublickey"
+#   tags: 'sinkers::register'
 
-- name: debug
-  debug: var="sshprivatekey"
+# - name: debug
+#   debug: var="sshprivatekey"
 
 - name: check if sinker is already registered
   uri:
@@ -27,11 +27,11 @@
     status_code: 200
     return_content: yes
   tags: 'sinkers::register'
-  register: probeid
+  register: probeid_check
 
-- name: debug
-  debug: var="probeid"
-  tags: 'sinkers::register'
+# - name: debug
+#   debug: var="probeid_check"
+#   tags: 'sinkers::register'
 
 - name: 'register new sinker in api'
   uri:
@@ -39,14 +39,28 @@
     method: POST
     #user: your_username
     #password: your_pass
-    body: "{{ lookup('template', 'sinker_registry_api_payload.json.j2') }}"
+    body: "{{ lookup('template', 'sinker_registry_api_payload.json.j2')|safe}}"
     body_format: "json"
     status_code: 201
     return_content: yes
-  when: (probeid is none) or (probeid | trim == '')
+  when: probeid_check['json'] | length == 0
   tags: 'sinkers::register'
-  register: probeid
+  register: probeid_new
 
-- name: debug
-  debug: var="probeid['json']"
+# - name: debug
+#   debug: var="probeid_check['json'][0]['ProbeID']"
+#   tags: 'sinkers::register'
+
+- name: 'update ssh key in sinkers api'
+  uri:
+    url: "{{sinker_registry_api_url}}v1/probe/ssh?id={{ probeid_check['json'][0]['ProbeID'] }}"
+    method: PUT
+    #user: your_username
+    #password: your_pass
+    body: "{{ lookup('template', 'sinker_registry_update_ssh.j2')|safe}}"
+    body_format: "json"
+    status_code: 200
+    return_content: yes
+  when: probeid_check['json'] | length != 0
   tags: 'sinkers::register'
+

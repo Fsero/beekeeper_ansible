@@ -22,7 +22,7 @@ do_start() {
       logger -t info [$NAME] $NAME already running
     else
       cd /srv/sinker_registry_api
-      docker-compose up &
+      docker-compose up --force-recreate --build &
       echo $! > $PIDFILE
       sleep 10
     fi
