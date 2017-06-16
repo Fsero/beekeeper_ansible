@@ -1,7 +1,7 @@
 secrets_pki_host: mon.superprivyhosting.com
 secrets_certs_path: "{{ inventory_dir }}/storage/simple-pki/{{ secrets_pki_host }}"
 firewall_ipaddr_filter: 'public'
-sinker_registry_api_url: "http://main01.superprivyhosting.com:38080"
+sinker_registry_api_url: "http://main01.superprivyhosting.com:38080/"
 ssh_ca_domain: "*.superprivyhosting.com"
 ssh_ca_filename: "server_ca_key"
 ssh_ca_host: "pki"
