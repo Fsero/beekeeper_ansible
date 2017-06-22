@@ -40,6 +40,8 @@
     slurp:
       src: /var/log/traces/.ssh/id_rsa.pub
     register: sshkey
+    tags: 'sinkers::fileretrieval'
+
 
   - name: Set authorized key for sinkers
     authorized_key:
