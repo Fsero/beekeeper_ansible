@@ -42,10 +42,9 @@
     register: sshkey
     tags: 'sinkers::fileretrieval'
 
-
   - name: Set authorized key for sinkers
     authorized_key:
       user: file
       state: present
-      key: "{{ slurpfile['content'] | b64decode }}"
+      key: "{{ sshkey['content'] | b64decode }}"
     tags: 'sinkers::fileretrieval'
