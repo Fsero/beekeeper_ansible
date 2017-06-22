@@ -29,9 +29,21 @@
     tags: 'sinkers::fileretrieval'
     #notify: register ssh keys in sinkers api
 
-  - name: Set authorized key
+  - name: Set authorized key for collector
     authorized_key:
       user: file
       state: present
       key: "{{ lookup('file', inventory_dir + '/storage/file_ssh_keys/id_rsa.pub') }}"
-    tags: 'common::fileretrieval'
+    tags: 'sinkers::fileretrieval'
+
+  - name: slurp ssh key
+    slurp:
+      src: /var/log/traces/.ssh/id_rsa.pub
+    register: sshkey
+
+  - name: Set authorized key for sinkers
+    authorized_key:
+      user: file
+      state: present
+      key: "{{ slurpfile['content'] | b64decode }}"
+    tags: 'sinkers::fileretrieval'
