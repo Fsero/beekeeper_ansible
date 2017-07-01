@@ -5,6 +5,8 @@
 - include: logrotate.yml
 - include: fileretrieval.yml
 - include: sinkerregistryapi.yml
+- include: metadataextractor.yml
+
 
 
 

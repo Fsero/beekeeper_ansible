@@ -1,0 +1,14 @@
+[Unit]
+Description=Launch metadataextractor 
+
+[Service]
+Type=forking
+ExecStart=/usr/local/sbin/metadataextractord start
+ExecStop=/usr/local/sbin/metadataextractord stop
+Requires=docker.service
+RemainAfterExit=no
+Restart=always
+PIDFile=/var/run/metadataextractord.pid
+
+[Install]
+WantedBy=multi-user.target

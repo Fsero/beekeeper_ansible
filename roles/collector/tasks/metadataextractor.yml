@@ -1,0 +1,92 @@
+- stat:
+    path: "{{ role_path }}/files/metadataextractor/gocode"
+  register: gocode_folder
+  delegate_to: 127.0.0.1
+  become: false
+  tags: 'collector::metadataextractor'
+
+- name: 'create gocode folder'
+  file:
+    path: "{{ role_path }}/files/metadataextractor/gocode"
+    state: directory
+  when: gocode_folder.stat.isdir is not defined 
+  delegate_to: 127.0.0.1
+  become: false
+  tags: 'collector::metadataextractor'
+
+- name: 'create path'
+  file:
+    path: "{{ role_path }}/files/metadataextractor/gocode/src/bitbucket.org/fseros/"
+    recurse: "yes"
+    state: directory
+  when: gocode_folder.stat.isdir is not defined
+  become: false
+  delegate_to: 127.0.0.1
+  tags: 'collector::metadataextractor'
+
+- name: 'get metadataextractor repo'
+  git:
+      repo: 'git@bitbucket.org:fseros/metadata_extractor.git'
+      dest: "{{ role_path }}/files/metadataextractor/gocode/src/bitbucket.org/fseros/"
+      ssh_opts: "-o StrictHostKeyChecking=no"   
+  when: gocode_folder.stat.isdir is not defined 
+  become: false
+  delegate_to: 127.0.0.1
+  tags: 'collector::metadataextractor'
+
+- name: 'compress metadataextractor repo'
+  archive:
+    path: "{{ role_path }}/files/metadataextractor/gocode"
+    dest: "{{ role_path }}/files/metadataextractor/gocode.tgz"
+  become: false
+  delegate_to: 127.0.0.1
+  tags: 'collector::metadataextractor'
+
+- name: 'delete gocode folder'
+  file:
+    path: "{{ role_path }}/files/metadataextractor/gocode"
+    state: absent
+  delegate_to: 127.0.0.1
+  become: false
+  tags: 'collector::metadataextractor'
+
+- name: 'create metadataextractor folder'
+  file:
+    path: "{{ metadataextractor_directory }}"
+    state: directory
+    mode: 0755
+  tags: 'collector::metadataextractor'
+
+- name: 'setting up metadataextractor'
+  copy:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      owner: root
+      group: root
+      mode: "{{ item.mode }}"
+  with_items: "{{metadataextractor_files}}"
+  tags: 'collector::metadataextractor'
+
+- name: "unpacking gocode"
+  unarchive:
+    src: "{{ metadataextractor_directory }}/gocode.tgz"
+    dest: "{{ metadataextractor_directory }}"
+    remote_src: True
+  tags: 'collector::metadataextractor'
+
+- name: 'starting up metadataextractord'
+  systemd:
+    state: started
+    name: metadataextractord
+    daemon_reload: yes
+    enabled: yes
+  tags: 'collector::metadataextractor'
+
+- name: 'reloading metadataextractor service'
+  systemd:
+    state: restarted
+    name: metadataextractord
+    daemon_reload: yes
+    enabled: yes
+  when: metadataextractor_restart | default("false") | match("true")
+  tags: 'collector::metadataextractor'
