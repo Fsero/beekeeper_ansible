@@ -25,5 +25,15 @@ sinkerregistryapi_files:
   - { src: '../files/sinkerregistryapi/sinkerregistryapid.service', dest: '/etc/systemd/system/sinkerregistryapid.service', mode: '0444' }
   - { src: '../files/sinkerregistryapi/gocode.tgz', dest: "{{sinkerregistryapi_directory}}/gocode.tgz", mode: '0444' }
 
+
+metadataextractor_directory: "/srv/metadataextractor"
+metadataextractor_files:
+  - { src: '../files/metadataextractor/docker-compose.yml', dest: "{{metadataextractor_directory}}/docker-compose.yml", mode: '0444' }
+  - { src: '../files/metadataextractor/Dockerfile', dest: "{{metadataextractor_directory}}/Dockerfile", mode: '0444' }
+  - { src: '../files/metadataextractor/metadataextractord', dest: '/usr/local/sbin/metadataextractord', mode: '0500' }
+  - { src: '../files/metadataextractor/metadataextractord.service', dest: '/etc/systemd/system/metadataextractord.service', mode: '0444' }
+  - { src: '../files/metadataextractor/gocode.tgz', dest: "{{metadataextractor_directory}}/gocode.tgz", mode: '0444' }
+
+
 sysdig_files:
    - { src: '../files/modified_sysdig_chisel/spy_users.lua', dest: '/usr/share/sysdig/chisels/spy_users.lua', mode: '0444' }
