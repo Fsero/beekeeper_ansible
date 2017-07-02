@@ -32,6 +32,8 @@ metadataextractor_files:
   - { src: '../files/metadataextractor/Dockerfile', dest: "{{metadataextractor_directory}}/Dockerfile", mode: '0444' }
   - { src: '../files/metadataextractor/metadataextractord', dest: '/usr/local/sbin/metadataextractord', mode: '0500' }
   - { src: '../files/metadataextractor/metadataextractord.service', dest: '/etc/systemd/system/metadataextractord.service', mode: '0444' }
+  - { src: '../files/metadataextractor/srv01metadataextractor.yaml', dest: '{{metadataextractor_directory}}', mode: '0444' }
+  - { src: '../files/metadataextractor/srv02metadataextractor.yaml', dest: '{{metadataextractor_directory}}', mode: '0444' }
   - { src: '../files/metadataextractor/gocode.tgz', dest: "{{metadataextractor_directory}}/gocode.tgz", mode: '0444' }
 
 

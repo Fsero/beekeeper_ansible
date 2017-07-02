@@ -1,4 +1,5 @@
 FROM library/golang:1.8-stretch
+ARG CONFIGFILE
 USER root
 RUN apt-get update
 RUN apt-get install -y gnupg
@@ -25,5 +26,5 @@ RUN cd $APP_DIR && CGO_ENABLED=0 /go/bin/glide install
 RUN cd $APP_DIR && go build
 WORKDIR $APP_DIR
 VOLUME /var/log/traces
-VOLUME $GOPATH/src/bitbucket.org/fseros/metadata_extractor/.metadata_extractor.yaml
+COPY $CONFIGFILE $APP_DIR/.metadata_extractor.yaml
 
