@@ -1,4 +1,5 @@
 output: es
 elasticsearch_host: 172.17.0.1
-elasticsearch_port: 39200
+elasticsearch_port: 9200
+sinker_api_url: "http://172.17.0.1:38080"
 probeid: "kTuoo-GmR9VEFo7C4_f7t2YTkpv22OeWbE1dIg=="

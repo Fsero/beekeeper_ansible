@@ -16,7 +16,7 @@
 
 - name: 'create path'
   file:
-    path: "{{ role_path }}/files/metadataextractor/gocode/src/bitbucket.org/fseros/"
+    path: "{{ role_path }}/files/metadataextractor/gocode/src/bitbucket.org/fseros/metadata_extractor"
     recurse: "yes"
     state: directory
   when: gocode_folder.stat.isdir is not defined
@@ -27,7 +27,7 @@
 - name: 'get metadataextractor repo'
   git:
       repo: 'git@bitbucket.org:fseros/metadata_extractor.git'
-      dest: "{{ role_path }}/files/metadataextractor/gocode/src/bitbucket.org/fseros/"
+      dest: "{{ role_path }}/files/metadataextractor/gocode/src/bitbucket.org/fseros/metadata_extractor"
       ssh_opts: "-o StrictHostKeyChecking=no"   
   when: gocode_folder.stat.isdir is not defined 
   become: false

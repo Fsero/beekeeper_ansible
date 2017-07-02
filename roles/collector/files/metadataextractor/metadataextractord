@@ -22,7 +22,7 @@ do_start() {
       logger -t info [$NAME] $NAME already running
     else
       cd /srv/metadataextractor
-      docker-compose up &
+      docker-compose up --build &
       echo $! > $PIDFILE
       sleep 10
     fi

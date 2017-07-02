@@ -5,12 +5,11 @@ services:
     build:
       context: . #current dir as build context
       args:
-        - CONFIG="/srv/metadataextractor/srv01metadataextractor.yaml"
+        - CONFIGFILE=srv01metadataextractor.yaml
     image: metadata_extractor_srv01
     command: ./metadata_extractor -v file
-    container_name: metadata_extractor
-    networks:
-      - api_net
+    container_name: metadata_extractor_srv01_file
+    network_mode: "host"
     volumes:
       - /var/log/traces:/var/log/traces
       
@@ -18,12 +17,11 @@ services:
     build:
       context: . #current dir as build context
       args:
-        - CONFIG="/srv/metadataextractor/srv02metadataextractor.yaml"
+        - CONFIGFILE=srv02metadataextractor.yaml
     image: metadata_extractor_srv02
     command: ./metadata_extractor -v file
-    container_name: metadata_extractor
-    networks:
-      - api_net
+    container_name: metadata_extractor_srv02_file
+    network_mode: "host"
     volumes:
       - /var/log/traces:/var/log/traces
      
@@ -31,12 +29,11 @@ services:
     build:
       context: . #current dir as build context
       args:
-        - CONFIG="/srv/metadataextractor/srv01metadataextractor.yaml"
+        - CONFIGFILE=srv01metadataextractor.yaml
     image: metadata_extractor_srv01
     command: ./metadata_extractor -v ssh -f
-    container_name: metadata_extractor
-    networks:
-      - api_net
+    container_name: metadata_extractor_srv01_ssh
+    network_mode: "host"
     volumes:
       - /var/log/traces:/var/log/traces
      
@@ -44,16 +41,10 @@ services:
     build:
       context: . #current dir as build context
       args:
-        - CONFIG="/srv/metadataextractor/srv02metadataextractor.yaml"
+        - CONFIGFILE=srv02metadataextractor.yaml
     image: metadata_extractor_srv02
     command: ./metadata_extractor -v ssh -f
-    container_name: metadata_extractor
-    networks:
-      - api_net
+    container_name: metadata_extractor_srv02_ssh
+    network_mode: "host"
     volumes:
       - /var/log/traces:/var/log/traces
-     
-networks:  
-  api_net:
-    external:
-      name: sinkerregistryapi_api_net
