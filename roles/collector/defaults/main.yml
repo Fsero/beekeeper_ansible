@@ -39,3 +39,4 @@ metadataextractor_files:
 
 sysdig_files:
    - { src: '../files/modified_sysdig_chisel/spy_users.lua', dest: '/usr/share/sysdig/chisels/spy_users.lua', mode: '0444' }
+   - { src: '../files/modified_sysdig_chisel/spy_users.lua', dest: '{{metadataextractor_directory}}/spy_users.lua', mode: '0444' }

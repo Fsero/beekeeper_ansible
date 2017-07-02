@@ -27,4 +27,5 @@ RUN cd $APP_DIR && go build
 WORKDIR $APP_DIR
 VOLUME /var/log/traces
 COPY $CONFIGFILE $APP_DIR/.metadata_extractor.yaml
+COPY spy_users.lua /usr/share/sysdig/chisels/spy_users.lua
 
