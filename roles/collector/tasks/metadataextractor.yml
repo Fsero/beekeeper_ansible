@@ -88,5 +88,5 @@
     name: metadataextractord
     daemon_reload: yes
     enabled: yes
-  when: metadataextractor_restart | default("false") | match("true")
+  when: metadataextractor_restart | default("true") | match("true")
   tags: 'collector::metadataextractor'
