@@ -52,4 +52,4 @@ services:
 networks:  
   api_net:
     external:
-      driver: bridge
+      name: sinkerregistryapi_api_net
