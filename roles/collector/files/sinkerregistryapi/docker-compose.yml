@@ -8,6 +8,7 @@ services:
     ports:
       - "172.17.0.1:38080:38080"
     container_name: sinker_registry_api
+    restart: always
     networks:
       - api_net
 
