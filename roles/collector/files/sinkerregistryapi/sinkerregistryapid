@@ -22,8 +22,9 @@ do_start() {
       logger -t info [$NAME] $NAME already running
     else
       cd /srv/sinker_registry_api
-      docker-compose up --force-recreate --build &
+      docker-compose up --force-recreate --build & 
       echo $! > $PIDFILE
+      docker container prune
       sleep 10
     fi
 }
@@ -34,6 +35,7 @@ do_stop() {
      kill $KPID
      cd /srv/sinker_registry_api
      docker-compose stop
+     docker container prune 
  fi
 }
 

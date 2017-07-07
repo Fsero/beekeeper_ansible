@@ -11,7 +11,14 @@ services:
     restart: always
     networks:
       - api_net
-
+    volumes:
+      - sinkerregistryapi:/etc/sinker_registry_api
+      
 networks:
   api_net:
     driver: bridge
+
+
+volumes:
+  sinkerregistryapi:
+    driver: local

@@ -24,6 +24,7 @@ do_start() {
       cd /srv/fileretrieval
       docker-compose up &
       echo $! > $PIDFILE
+      docker container prune 
       sleep 10
     fi
 }
@@ -34,6 +35,7 @@ do_stop() {
      kill $KPID
      cd /srv/fileretrieval
      docker-compose stop
+     docker container prune 
  fi
 }
 
