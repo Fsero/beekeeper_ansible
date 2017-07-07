@@ -5,6 +5,13 @@
     mode: 0755
   tags: 'collector::elasticsearch'
 
+- name: 'create elasticsearch backups folder'
+  file:
+    path: "/var/backups/es"
+    state: directory
+    mode: 0755
+  tags: 'collector::elasticsearch'
+
 - name: 'increase vm.max_map count'
   sysctl:
     name: vm.max_map_count

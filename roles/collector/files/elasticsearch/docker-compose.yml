@@ -15,6 +15,9 @@ services:
       - -Ediscovery.zen.ping.unicast.hosts=master01,master02,master03
       - -Enetwork.host=_eth0_
       - -Enode.max_local_storage_nodes=10
+      - -Epath.repo=/var/backups/es
+    volumes:
+      - /var/backups/es:/var/backup/es
     ports:
       - "172.17.0.1:9200:9200"
     restart: always
@@ -31,10 +34,12 @@ services:
       - -Ediscovery.zen.ping.unicast.hosts=master01,master02,master03
       - -Enetwork.host=_eth0_
       - -Enode.max_local_storage_nodes=10
+      - -Epath.repo=/var/backups/es
     ports:
       - "172.17.0.1:9201:9200"
     volumes:
       - esdata1:/usr/share/elasticsearch/data
+      - /var/backups/es:/var/backup/es
     restart: always
   data02:
     container_name: data02
@@ -49,10 +54,12 @@ services:
       - -Ediscovery.zen.ping.unicast.hosts=master01,master02,master03
       - -Enetwork.host=_eth0_
       - -Enode.max_local_storage_nodes=10
+      - -Epath.repo=/var/backups/es
     ports:
       - "172.17.0.1:9202:9200"
     volumes:
       - esdata2:/usr/share/elasticsearch/data
+      - /var/backups/es:/var/backup/es
     restart: always
   data03:
     container_name: data03
@@ -67,10 +74,12 @@ services:
       - -Ediscovery.zen.ping.unicast.hosts=master01,master02,master03
       - -Enetwork.host=_eth0_
       - -Enode.max_local_storage_nodes=10
+      - -Epath.repo=/var/backups/es
     ports:
       - "172.17.0.1:9203:9200"
     volumes:
       - esdata3:/usr/share/elasticsearch/data
+      - /var/backups/es:/var/backup/es
     restart: always  
   # data04:
   #   container_name: data04
@@ -111,6 +120,8 @@ services:
     extends:
       file: common.yml
       service: elastic
+    volumes:
+      - /var/backups/es:/var/backup/es
     command:
       - elasticsearch
       - -Ecluster.name=potcluster
@@ -120,6 +131,7 @@ services:
       - -Ediscovery.zen.minimum_master_nodes=2
       - -Enetwork.host=_eth0_
       - -Enode.max_local_storage_nodes=10
+      - -Epath.repo=/var/backups/es
     ports:
       - "172.17.0.1:9210:9200"
     restart: always
@@ -128,6 +140,8 @@ services:
     extends:
       file: common.yml
       service: elastic
+    volumes:
+      - /var/backups/es:/var/backup/es
     command:
       - elasticsearch
       - -Ecluster.name=potcluster
@@ -137,6 +151,7 @@ services:
       - -Ediscovery.zen.minimum_master_nodes=2
       - -Enetwork.host=_eth0_
       - -Enode.max_local_storage_nodes=10
+      - -Epath.repo=/var/backups/es
     ports:
       - "172.17.0.1:9211:9200"
     restart: always
@@ -145,6 +160,8 @@ services:
     extends:
       file: common.yml
       service: elastic
+    volumes:
+      - /var/backups/es:/var/backup/es
     command:
       - elasticsearch
       - -Ecluster.name=potcluster
@@ -154,6 +171,7 @@ services:
       - -Ediscovery.zen.minimum_master_nodes=2
       - -Enetwork.host=_eth0_
       - -Enode.max_local_storage_nodes=10
+      - -Epath.repo=/var/backups/es
     ports:
       - "172.17.0.1:9212:9200"
     restart: always
