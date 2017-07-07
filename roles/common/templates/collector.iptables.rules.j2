@@ -9,9 +9,9 @@ iptables -A INPUT -p tcp -m state --state NEW -m tcp --dport 30009 -j ACCEPT
 iptables -A INPUT -p tcp -m state --state NEW -m tcp --dport 80 -j ACCEPT
 iptables -A INPUT -p tcp -m state --state NEW -m tcp --dport 443 -j ACCEPT
 # DEBUG
-iptables -A INPUT -p tcp -s 79.156.153.36 -m state --state NEW -m tcp --dport 5601 -j ACCEPT
-iptables -A INPUT -p tcp -s 79.156.153.36 -m state --state NEW -m tcp --dport 9200 -j ACCEPT
-iptables -A INPUT -p tcp -s 79.156.153.36 -m state --state NEW -m tcp --dport 38080 -j ACCEPT
+iptables -A INPUT -p tcp -s 178.79.185.138 -m state --state NEW -m tcp --dport 5601 -j ACCEPT
+iptables -A INPUT -p tcp -s 178.79.185.138 -m state --state NEW -m tcp --dport 9200 -j ACCEPT
+iptables -A INPUT -p tcp -s 178.79.185.138 -m state --state NEW -m tcp --dport 38080 -j ACCEPT
 
 {% if  'vm.localhost' in inventory_hostname %}
 iptables -A INPUT -p tcp -s 10.0.2.2 -m state --state NEW -m tcp --dport 5601 -j ACCEPT
