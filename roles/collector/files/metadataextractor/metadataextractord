@@ -24,7 +24,6 @@ do_start() {
       cd /srv/metadataextractor
       docker-compose up --build &
       echo $! > $PIDFILE
-      docker container prune 
       sleep 10
     fi
 }
@@ -35,8 +34,6 @@ do_stop() {
      kill $KPID
      cd /srv/metadataextractor
      docker-compose stop
-     docker container prune 
-
  fi
 }
 
