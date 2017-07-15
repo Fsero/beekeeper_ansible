@@ -12,10 +12,10 @@ services:
       - -Enode.name=elasticsearch
       - -Enode.master=false
       - -Enode.data=false
-      - -Ediscovery.zen.ping.unicast.hosts=master01,master02,master03
+      - -Ediscovery.zen.ping.unicast.hosts=master01,master02
       - -Enetwork.host=_eth0_
       - -Enode.max_local_storage_nodes=10
-      - -Epath.repo=/var/backups/es
+      #- -Epath.repo=/var/backups/es
     volumes:
       - /var/backups/es:/var/backup/es
     ports:
@@ -31,10 +31,10 @@ services:
       - -Ecluster.name=potcluster
       - -Enode.name=data01
       - -Enode.master=false
-      - -Ediscovery.zen.ping.unicast.hosts=master01,master02,master03
+      - -Ediscovery.zen.ping.unicast.hosts=master01,master02
       - -Enetwork.host=_eth0_
       - -Enode.max_local_storage_nodes=10
-      - -Epath.repo=/var/backups/es
+      #- -Epath.repo=/var/backups/es
     ports:
       - "172.17.0.1:9201:9200"
     volumes:
@@ -51,10 +51,10 @@ services:
       - -Ecluster.name=potcluster
       - -Enode.name=data02
       - -Enode.master=false
-      - -Ediscovery.zen.ping.unicast.hosts=master01,master02,master03
+      - -Ediscovery.zen.ping.unicast.hosts=master01,master02
       - -Enetwork.host=_eth0_
       - -Enode.max_local_storage_nodes=10
-      - -Epath.repo=/var/backups/es
+      #- -Epath.repo=/var/backups/es
     ports:
       - "172.17.0.1:9202:9200"
     volumes:
@@ -71,10 +71,10 @@ services:
       - -Ecluster.name=potcluster
       - -Enode.name=data03
       - -Enode.master=false
-      - -Ediscovery.zen.ping.unicast.hosts=master01,master02,master03
+      - -Ediscovery.zen.ping.unicast.hosts=master01,master02
       - -Enetwork.host=_eth0_
       - -Enode.max_local_storage_nodes=10
-      - -Epath.repo=/var/backups/es
+      #- -Epath.repo=/var/backups/es
     ports:
       - "172.17.0.1:9203:9200"
     volumes:
@@ -91,7 +91,7 @@ services:
   #     - -Ecluster.name=potcluster
   #     - -Enode.name=data04
   #     - -Enode.master=false
-  #     - -Ediscovery.zen.ping.unicast.hosts=master01,master02,master03
+  #     - -Ediscovery.zen.ping.unicast.hosts=master01,master02
   #     - -Enetwork.host=_eth0_
   #     - -Enode.max_local_storage_nodes=10
   #   ports:
@@ -108,7 +108,7 @@ services:
   #     - -Ecluster.name=potcluster
   #     - -Enode.name=data05
   #     - -Enode.master=false
-  #     - -Ediscovery.zen.ping.unicast.hosts=master01,master02,master03
+  #     - -Ediscovery.zen.ping.unicast.hosts=master01,master02
   #     - -Enetwork.host=_eth0_
   #     - -Enode.max_local_storage_nodes=10
   #   volumes:
@@ -127,11 +127,11 @@ services:
       - -Ecluster.name=potcluster
       - -Enode.name=master01
       - -Enode.data=false
-      - -Ediscovery.zen.ping.unicast.hosts=master02,master03
+      - -Ediscovery.zen.ping.unicast.hosts=master02
       - -Ediscovery.zen.minimum_master_nodes=2
       - -Enetwork.host=_eth0_
       - -Enode.max_local_storage_nodes=10
-      - -Epath.repo=/var/backups/es
+      #- -Epath.repo=/var/backups/es
     ports:
       - "172.17.0.1:9210:9200"
     restart: always
@@ -147,34 +147,34 @@ services:
       - -Ecluster.name=potcluster
       - -Enode.name=master02
       - -Enode.data=false
-      - -Ediscovery.zen.ping.unicast.hosts=master01,master03
+      - -Ediscovery.zen.ping.unicast.hosts=master01
       - -Ediscovery.zen.minimum_master_nodes=2
       - -Enetwork.host=_eth0_
       - -Enode.max_local_storage_nodes=10
-      - -Epath.repo=/var/backups/es
+      #- -Epath.repo=/var/backups/es
     ports:
       - "172.17.0.1:9211:9200"
     restart: always
-  master03:
-    container_name: master03
-    extends:
-      file: common.yml
-      service: elastic
-    volumes:
-      - /var/backups/es:/var/backup/es
-    command:
-      - elasticsearch
-      - -Ecluster.name=potcluster
-      - -Enode.name=master03
-      - -Enode.data=false
-      - -Ediscovery.zen.ping.unicast.hosts=master01,master02
-      - -Ediscovery.zen.minimum_master_nodes=2
-      - -Enetwork.host=_eth0_
-      - -Enode.max_local_storage_nodes=10
-      - -Epath.repo=/var/backups/es
-    ports:
-      - "172.17.0.1:9212:9200"
-    restart: always
+  # master03:
+  #   container_name: master03
+  #   extends:
+  #     file: common.yml
+  #     service: elastic
+  #   volumes:
+  #     - /var/backups/es:/var/backup/es
+  #   command:
+  #     - elasticsearch
+  #     - -Ecluster.name=potcluster
+  #     - -Enode.name=master03
+  #     - -Enode.data=false
+  #     - -Ediscovery.zen.ping.unicast.hosts=master01,master02
+  #     - -Ediscovery.zen.minimum_master_nodes=2
+  #     - -Enetwork.host=_eth0_
+  #     - -Enode.max_local_storage_nodes=10
+  #     #- -Epath.repo=/var/backups/es
+  #   ports:
+  #     - "172.17.0.1:9212:9200"
+  #   restart: always
   kibana:
     container_name: kibana
     extends:
