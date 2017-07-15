@@ -14,37 +14,37 @@
     mode: 0444
   tags: 'collector::fileretrieval'
 
-- name: granting file user access to logs via acl
-  acl:
-    path: /var/log
-    entity: 1000
-    etype: group
-    permissions: rx
-    default: yes
-    state: present
-    recursive: yes
-  tags: 'collector::fileretrieval'
+# - name: granting file user access to logs via acl
+#   acl:
+#     path: /var/log
+#     entity: 1000
+#     etype: group
+#     permissions: rx
+#     default: yes
+#     state: present
+#     recursive: yes
+#   tags: 'collector::fileretrieval'
 
-- name: granting file user access to logs 
-  acl:
-    path: /var/log
-    entity: 1000
-    etype: group
-    permissions: rx
-    state: present
-    recursive: yes
-  tags: 'collector::fileretrieval'
+# - name: granting file user access to logs 
+#   acl:
+#     path: /var/log
+#     entity: 1000
+#     etype: group
+#     permissions: rx
+#     state: present
+#     recursive: yes
+#   tags: 'collector::fileretrieval'
 
-- name: granting file user access to logs via acl
-  acl:
-    path: /var/log
-    entity: file
-    etype: user
-    permissions: r
-    default: yes
-    state: present
-    recursive: yes
-  tags: 'collector::fileretrieval'
+# - name: granting file user access to logs via acl
+#   acl:
+#     path: /var/log
+#     entity: file
+#     etype: user
+#     permissions: r
+#     default: yes
+#     state: present
+#     recursive: yes
+#   tags: 'collector::fileretrieval'
 
 - name: 'setting up fileretrieval'
   copy:
