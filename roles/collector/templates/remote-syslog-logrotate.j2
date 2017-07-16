@@ -1,6 +1,81 @@
 # {{ansible_managed}}
 {% for host in groups['sinkers'] %}
- /var/log/{{hostvars[host]['ansible_hostname']}}/*
+/var/log/{{hostvars[host]['ansible_hostname']}}/cron
+{
+	rotate 7
+	daily
+	missingok
+	notifempty
+	delaycompress
+	compress
+	postrotate
+		invoke-rc.d rsyslog rotate > /dev/null
+	endscript
+}
+/var/log/{{hostvars[host]['ansible_hostname']}}/falco.log
+{
+	rotate 52
+	daily
+	missingok
+	notifempty
+	delaycompress
+	compress
+	postrotate
+		invoke-rc.d rsyslog rotate > /dev/null
+	endscript
+}
+/var/log/{{hostvars[host]['ansible_hostname']}}/messages
+{
+	rotate 7
+	daily
+	missingok
+	notifempty
+	delaycompress
+	compress
+	postrotate
+		invoke-rc.d rsyslog rotate > /dev/null
+	endscript
+}
+/var/log/{{hostvars[host]['ansible_hostname']}}/secure
+{
+	rotate 7
+	daily
+	missingok
+	notifempty
+	delaycompress
+	compress
+	postrotate
+		invoke-rc.d rsyslog rotate > /dev/null
+	endscript
+}
+{% endfor %}
+{% for host in groups['collector'] %}
+/var/log/{{hostvars[host]['ansible_hostname']}}/cron
+{
+	rotate 7
+	daily
+	missingok
+	notifempty
+	delaycompress
+	compress
+	postrotate
+		invoke-rc.d rsyslog rotate > /dev/null
+	endscript
+}
+/var/log/{{hostvars[host]['ansible_hostname']}}/messages
+{
+	rotate 52
+	daily
+	missingok
+	notifempty
+	size 10G
+	delaycompress
+	compress
+	postrotate
+		invoke-rc.d rsyslog rotate > /dev/null
+	endscript
+}
+/var/log/{{hostvars[host]['ansible_hostname']}}/secure
 {
 	rotate 7
 	daily
