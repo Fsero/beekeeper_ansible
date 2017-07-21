@@ -10,9 +10,4 @@ services:
       - "172.17.0.1:8080:8080"
     container_name: beekeeper_api
     restart: always
-    networks:
-      - beekeeperapi_net
-      
-networks:
-  beekeeperapi_net:
-    driver: bridge
+    network_mode: "host"
