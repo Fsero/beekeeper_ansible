@@ -1,0 +1,34 @@
+- name: 'create gateway folder'
+  file:
+    path: "{{ gateway_directory }}"
+    state: directory
+    mode: 0755
+  tags: 'collector::gateway'
+
+- name: 'setting up gateway'
+  copy:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      owner: root
+      group: root
+      mode: "{{ item.mode }}"
+  with_items: "{{gateway_files}}"
+  tags: 'collector::gateway'
+  
+- name: 'starting up gatewayd'
+  systemd:
+    state: started
+    name: gatewayd
+    daemon_reload: yes
+    enabled: yes
+  tags: 'collector::gateway'
+
+- name: 'reloading gateway service'
+  systemd:
+    state: restarted
+    name: gatewayd
+    daemon_reload: yes
+    enabled: yes
+  when: gateway_restart | default("false") | match("true")
+  tags: 'collector::gateway'
+

@@ -17,6 +17,8 @@ fileretrieval_files:
   - { src: '../files/fileretrieval/fileretrievald.service', dest: '/etc/systemd/system/fileretrievald.service', mode: '0444' }
   - { src: '../files/fileretrieval/logstash', dest: "{{fileretrieval_directory}}", mode: '0555' }
 
+
+
 sinkerregistryapi_directory: "/srv/sinker_registry_api"
 sinkerregistryapi_files:
   - { src: '../files/sinkerregistryapi/docker-compose.yml', dest: "{{sinkerregistryapi_directory}}/docker-compose.yml", mode: '0444' }
@@ -49,3 +51,11 @@ beekeeperapi_files:
 sysdig_files:
    - { src: '../files/modified_sysdig_chisel/spy_users.lua', dest: '/usr/share/sysdig/chisels/spy_users.lua', mode: '0444' }
    - { src: '../files/modified_sysdig_chisel/spy_users.lua', dest: '{{metadataextractor_directory}}/spy_users.lua', mode: '0444' }
+
+
+gateway_directory: "/srv/gateway"
+gateway_files:
+  - { src: '../files/gateway/docker-compose.yml', dest: "{{gateway_directory}}/docker-compose.yml", mode: '0444' }
+  - { src: '../files/gateway/gatewayd', dest: '/usr/local/sbin/gatewayd', mode: '0500' }
+  - { src: '../files/gateway/gatewayd.service', dest: '/etc/systemd/system/gatewayd.service', mode: '0444' }
+  - { src: '../files/gateway/krakend.json', dest: "{{gateway_directory}}", mode: '0555' }

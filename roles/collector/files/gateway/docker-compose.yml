@@ -1,0 +1,13 @@
+version: "2"
+
+services:
+  krakend:
+    image: devopsfaith/krakend
+    command: -d run --log DEBUG --port 80 --ssl_certificate /etc/ssl/letsencrypt/live/potapi.fsero.net/fullchain.pem --ssl_private_key /etc/ssl/letsencrypt/live/potapi.fsero.net/privkey.pem --ssl_port 443
+    container_name: krakend
+    restart: always
+    network_mode: "host"
+    volumes:
+      - /etc/ssl/letsencrypt:/etc/ssl/letsencrypt 
+      - /srv/gateway:/etc/krakend/
+      

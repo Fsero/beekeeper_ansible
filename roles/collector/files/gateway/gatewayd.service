@@ -1,0 +1,20 @@
+[Unit]
+Description=Launch gateway
+After=docker.service
+BindsTo=docker.service
+After=elasticsearchd.service
+BindsTo=elasticsearchd.service
+After=sinkerregistryapid.service
+BindsTo=sinkerregistryapid.service
+
+
+[Service]
+Type=forking
+ExecStart=/usr/local/sbin/gatewayd start
+ExecStop=/usr/local/sbin/gatewayd stop
+RemainAfterExit=no
+Restart=always
+PIDFile=/var/run/gatewayd.pid
+
+[Install]
+WantedBy=multi-user.target

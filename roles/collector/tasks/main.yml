@@ -7,6 +7,8 @@
 - include: sinkerregistryapi.yml
 - include: metadataextractor.yml
 - include: beekeeperapi.yml
+- include: krakend.yml
+
 
 
 

@@ -1,0 +1,42 @@
+{
+    "version": 1,
+    "default_max_rate": "1000",
+    "client_max_rate": "1000",
+    "throttling_header": "",
+    "timeout": "3000ms",
+    "cache_ttl": "3000s",
+    "name": "Beekeeper API",
+
+    "endpoints": [{
+        "endpoint": "/v1/ssh/incident",
+        "method": "GET",
+        "concurrent_calls": 1,
+        "client_max_rate": 0,
+        "querystring_params": [
+            "from",
+            "to",
+            "size"
+        ],
+        "backend": [{
+            "url_pattern": "/v1/ssh/incident",
+            "encoding": "json",
+            "host": [
+                "http://172.17.0.1:8080"
+            ]
+        }]
+    }],
+    "oauth": {
+        "disable": true
+    },
+    "security": {
+        "disable": false,
+        "ssl_host": "potapi.fsero.net",
+        "ssl_certificate": "/etc/ssl/letsencrypt/live/potapi.fsero.net/fullchain.pem",
+        "ssl_private_key": "/etc/ssl/letsencrypt/live/potapi.fsero.net/privkey.pem",
+        "allowed_hosts": [
+            "potapi.fsero.net:443"
+        ],
+        "ssl_port": "443"
+    }
+
+}
