@@ -1,5 +1,7 @@
 [Unit]
-Description=Launch sinkerregistryapi 
+Description=Launch sinkerregistryapi
+After=docker.service
+BindsTo=docker.service
 
 [Service]
 Type=forking

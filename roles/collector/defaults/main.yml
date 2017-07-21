@@ -37,6 +37,15 @@ metadataextractor_files:
   - { src: '../files/metadataextractor/gocode.tgz', dest: "{{metadataextractor_directory}}/gocode.tgz", mode: '0444' }
 
 
+beekeeperapi_directory: "/srv/beekeeperapi"
+beekeeperapi_files:
+  - { src: '../files/beekeeperapi/docker-compose.yml', dest: "{{beekeeperapi_directory}}/docker-compose.yml", mode: '0444' }
+  - { src: '../files/beekeeperapi/Dockerfile', dest: "{{beekeeperapi_directory}}/Dockerfile", mode: '0444' }
+  - { src: '../files/beekeeperapi/beekeeperapid', dest: '/usr/local/sbin/beekeeperapid', mode: '0500' }
+  - { src: '../files/beekeeperapi/beekeeperapid.service', dest: '/etc/systemd/system/beekeeperapid.service', mode: '0444' }
+  - { src: '../files/beekeeperapi/gocode.tgz', dest: "{{beekeeperapi_directory}}/gocode.tgz", mode: '0444' }
+
+
 sysdig_files:
    - { src: '../files/modified_sysdig_chisel/spy_users.lua', dest: '/usr/share/sysdig/chisels/spy_users.lua', mode: '0444' }
    - { src: '../files/modified_sysdig_chisel/spy_users.lua', dest: '{{metadataextractor_directory}}/spy_users.lua', mode: '0444' }

@@ -1,5 +1,11 @@
 [Unit]
-Description=Launch metadataextractor 
+Description=Launch metadataextractor
+After=docker.service
+BindsTo=docker.service
+After=elasticsearchd.service
+BindsTo=elasticsearchd.service
+After=sinkerregistryapid.service
+BindsTo=sinkerregistryapid.service
 
 [Service]
 Type=forking

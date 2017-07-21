@@ -1,0 +1,18 @@
+version: "2"
+
+services:
+  beekeeper_api:
+    build:
+      context: . #current dir as build context
+    image: beekeeperapi
+    command: ./beekeeper_api
+    ports:
+      - "172.17.0.1:8080:8080"
+    container_name: beekeeper_api
+    restart: always
+    networks:
+      - beekeeperapi_net
+      
+networks:
+  beekeeperapi_net:
+    driver: bridge

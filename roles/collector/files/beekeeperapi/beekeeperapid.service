@@ -1,18 +1,20 @@
 [Unit]
-Description=Launch fileretrieval
+Description=Launch beekeeperapi
 After=docker.service
 BindsTo=docker.service
 After=elasticsearchd.service
 BindsTo=elasticsearchd.service
+After=sinkerregistryapid.service
+BindsTo=sinkerregistryapid.service
 
 [Service]
 Type=forking
-ExecStart=/usr/local/sbin/fileretrievald start
-ExecStop=/usr/local/sbin/fileretrievald stop
+ExecStart=/usr/local/sbin/beekeeperapid start
+ExecStop=/usr/local/sbin/beekeeperapid stop
 Requires=docker.service
 RemainAfterExit=no
 Restart=always
-PIDFile=/var/run/fileretrievald.pid
+PIDFile=/var/run/beekeeperapid.pid
 
 [Install]
 WantedBy=multi-user.target

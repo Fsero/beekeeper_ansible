@@ -6,6 +6,8 @@
 - include: fileretrieval.yml
 - include: sinkerregistryapi.yml
 - include: metadataextractor.yml
+- include: beekeeperapi.yml
+
 
 
 

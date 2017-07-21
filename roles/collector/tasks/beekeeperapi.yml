@@ -1,0 +1,92 @@
+- stat:
+    path: "{{ role_path }}/files/beekeeperapi/gocode"
+  register: gocode_folder
+  delegate_to: 127.0.0.1
+  become: false
+  tags: 'collector::beekeeperapi'
+
+- name: 'create gocode folder'
+  file:
+    path: "{{ role_path }}/files/beekeeperapi/gocode"
+    state: directory
+  when: gocode_folder.stat.isdir is not defined 
+  delegate_to: 127.0.0.1
+  become: false
+  tags: 'collector::beekeeperapi'
+
+- name: 'create path'
+  file:
+    path: "{{ role_path }}/files/beekeeperapi/gocode/src/bitbucket.org/fseros/beekeeper_api"
+    recurse: "yes"
+    state: directory
+  when: gocode_folder.stat.isdir is not defined
+  become: false
+  delegate_to: 127.0.0.1
+  tags: 'collector::beekeeperapi'
+
+- name: 'get beekeeperapi repo'
+  git:
+      repo: 'git@bitbucket.org:fseros/beekeeper_api.git'
+      dest: "{{ role_path }}/files/beekeeperapi/gocode/src/bitbucket.org/fseros/beekeeper_api"
+      ssh_opts: "-o StrictHostKeyChecking=no"   
+  when: gocode_folder.stat.isdir is not defined 
+  become: false
+  delegate_to: 127.0.0.1
+  tags: 'collector::beekeeperapi'
+
+- name: 'compress beekeeperapi repo'
+  archive:
+    path: "{{ role_path }}/files/beekeeperapi/gocode"
+    dest: "{{ role_path }}/files/beekeeperapi/gocode.tgz"
+  become: false
+  delegate_to: 127.0.0.1
+  tags: 'collector::beekeeperapi'
+
+- name: 'delete gocode folder'
+  file:
+    path: "{{ role_path }}/files/beekeeperapi/gocode"
+    state: absent
+  delegate_to: 127.0.0.1
+  become: false
+  tags: 'collector::beekeeperapi'
+
+- name: 'create beekeeperapi folder'
+  file:
+    path: "{{ beekeeperapi_directory }}"
+    state: directory
+    mode: 0755
+  tags: 'collector::beekeeperapi'
+
+- name: 'setting up beekeeperapi'
+  copy:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      owner: root
+      group: root
+      mode: "{{ item.mode }}"
+  with_items: "{{beekeeperapi_files}}"
+  tags: 'collector::beekeeperapi'
+
+- name: "unpacking gocode"
+  unarchive:
+    src: "{{ beekeeperapi_directory }}/gocode.tgz"
+    dest: "{{ beekeeperapi_directory }}"
+    remote_src: True
+  tags: 'collector::beekeeperapi'
+
+- name: 'starting up beekeeperapid'
+  systemd:
+    state: started
+    name: beekeeperapid
+    daemon_reload: yes
+    enabled: yes
+  tags: 'collector::beekeeperapi'
+
+- name: 'reloading beekeeperapi service'
+  systemd:
+    state: restarted
+    name: beekeeperapid
+    daemon_reload: yes
+    enabled: yes
+  when: beekeeperapi_restart | default("true") | match("true")
+  tags: 'collector::beekeeperapi'

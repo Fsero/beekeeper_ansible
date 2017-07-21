@@ -1,5 +1,7 @@
 [Unit]
 Description=Launch elasticsearch cluster
+After=docker.service
+BindsTo=docker.service
 
 [Service]
 Type=forking

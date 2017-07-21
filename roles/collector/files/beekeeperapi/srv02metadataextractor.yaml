@@ -1,0 +1,5 @@
+output: es
+elasticsearch_host: 172.17.0.1
+elasticsearch_port: 9200
+sinker_api_url: "http://172.17.0.1:38080"
+probeid: "zqA3TQSranjPmE36uJDqPF0b_t5adY1H2ylAdg=="
