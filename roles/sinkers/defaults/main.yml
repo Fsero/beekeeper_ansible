@@ -28,3 +28,7 @@ container_files:
   - { src: '../files/containersvc.service', dest: '/etc/systemd/system/containersvc.service', mode: '0444' }
 
 
+unattended_origins_patterns:
+  - 'origin=Debian,codename=${distro_codename},label=Debian-Security'
+unattended_package_blacklist: [cowsay, vim, docker-ce, docker, sysdig, falco]
+unattended_mail: 'root'

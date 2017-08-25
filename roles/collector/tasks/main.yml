@@ -1,6 +1,5 @@
 - include: users_rsync.yml
 - include: docker.yml
-- include: sysdig.yml
 - include: elasticsearch.yml
 - include: logrotate.yml
 - include: fileretrieval.yml
@@ -8,6 +7,8 @@
 - include: metadataextractor.yml
 - include: beekeeperapi.yml
 - include: krakend.yml
+- include: sysdig.yml
+
 
 
 

@@ -18,3 +18,6 @@
 	path = roles/ansible-go
 	url = https://github.com/Fsero/ansible-go.git
 	branch = stable
+[submodule "roles/ansible-role-unattended-upgrades"]
+	path = roles/ansible-role-unattended-upgrades
+	url = https://github.com/jnv/ansible-role-unattended-upgrades.git

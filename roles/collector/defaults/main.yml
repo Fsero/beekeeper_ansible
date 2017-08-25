@@ -59,3 +59,8 @@ gateway_files:
   - { src: '../files/gateway/gatewayd', dest: '/usr/local/sbin/gatewayd', mode: '0500' }
   - { src: '../files/gateway/gatewayd.service', dest: '/etc/systemd/system/gatewayd.service', mode: '0444' }
   - { src: '../files/gateway/krakend.json', dest: "{{gateway_directory}}", mode: '0555' }
+
+unattended_origins_patterns:
+    - 'origin=Debian,codename=${distro_codename},label=Debian-Security'
+unattended_package_blacklist: [cowsay, vim, docker-ce, docker, sysdig]
+unattended_mail: 'root'
