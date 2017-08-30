@@ -15,12 +15,14 @@ NAME="containersvc"
 PIDFILE="/var/run/containersvc.pid"
 touch $PIDFILE
 KPID=$(cat $PIDFILE)
+DOCKER_NETWORK="image_ssh"
 
 do_start() {
     touch $PIDFILE
     if [ -n "${KPID}" -a -d "/proc/${KPID}" ];then
       logger -t info [$NAME] $NAME already running
     else
+      # cleanup unused and old docker images and volumes
       docker system prune -f
       cd /var/tmp/image
       export RANDOM_PASSWORD=$(shuf -n 1 /usr/share/dict/typical_passwords)
@@ -28,7 +30,7 @@ do_start() {
       docker-compose up --build &
       echo $! > $PIDFILE
       sleep 10
-      /usr/local/sbin/tc_manager.sh start image_ssh
+      /usr/local/sbin/tc_manager.sh start $DOCKER_NETWORK
     fi
 }
 
@@ -41,7 +43,7 @@ do_stop() {
      # clearing up older iptables routes
      iptables -Z -t nat
      iptables -F -t nat
-     /usr/local/sbin/tc_manager.sh stop image_ssh
+     /usr/local/sbin/tc_manager.sh stop $DOCKER_NETWORK
  fi
 }
 
