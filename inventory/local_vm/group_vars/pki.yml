@@ -20,5 +20,5 @@ simplepki_fetch_pki_users: false
 simplepki_fetch_pki_ca: true
 simplepki_fetch_pki_servers: true
 simplepki_dest_dir: "{{ inventory_dir }}/../secret"
-simplepki_server_certs: [ { fqdn: 'srv01.superprivyhosting.com' }, { fqdn: 'srv02.superprivyhosting.com' }, { fqdn: 'main01.superprivyhosting.com' } ]
+simplepki_server_certs: [ { fqdn: 'srv01.{{ pot_domain }}' }, { fqdn: 'srv02.{{ pot_domain }}' }, { fqdn: 'main01.{{ pot_domain }}' } ]
 

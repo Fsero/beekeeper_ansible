@@ -1,8 +1,8 @@
 ---
 rsyslog_rsyslog_enable_tls: true
 rsyslog_rsyslog_tls_ca_path: "/etc/ssl/certs/chained-ca.sha256.4096.crt"
-rsyslog_rsyslog_tls_cert_path: "/etc/ssl/certs/{{ ansible_hostname }}.superprivyhosting.com.sha256.4096.crt"
-rsyslog_rsyslog_tls_key_path: "/etc/ssl/private/{{ ansible_hostname }}.superprivyhosting.com.sha256.4096.key"
+rsyslog_rsyslog_tls_cert_path: "/etc/ssl/certs/{{ ansible_hostname }}.{{ pot_domain }}.sha256.4096.crt"
+rsyslog_rsyslog_tls_key_path: "/etc/ssl/private/{{ ansible_hostname }}.{{ pot_domain }}.sha256.4096.key"
 rsyslog_rsyslog_d_presets_50_default:
   rules:
     #
@@ -102,7 +102,7 @@ rsyslog_rsyslog_d_files:
                    MaxSessions="2000"
                    StreamDriver.mode="1"
                   StreamDriver.authmode="x509/name"
-                   PermittedPeer="*.superprivyhosting.com")
+                   PermittedPeer="*.{{ pot_domain }}")
             - input(type="imtcp" port="10514" name="tcp-tls")
 
           13-split-files-over-hostname:

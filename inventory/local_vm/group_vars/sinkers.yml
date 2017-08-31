@@ -1,10 +1,10 @@
 ---
 rsyslog_rsyslog_enable_tls: true
 rsyslog_rsyslog_tls_ca_path: "/etc/ssl/certs/chained-ca.sha256.4096.crt"
-rsyslog_rsyslog_tls_cert_path: "/etc/ssl/certs/{{ ansible_hostname }}.superprivyhosting.com.sha256.4096.crt"
-rsyslog_rsyslog_tls_key_path: "/etc/ssl/private/{{ ansible_hostname }}.superprivyhosting.com.sha256.4096.key"
-rsyslog_rsyslog_collector_dns_name: "main01.superprivyhosting.com"
-rsyslog_rsyslog_collector_host_name: "main01.superprivyhosting.com"
+rsyslog_rsyslog_tls_cert_path: "/etc/ssl/certs/{{ ansible_hostname }}.{{ pot_domain }}.sha256.4096.crt"
+rsyslog_rsyslog_tls_key_path: "/etc/ssl/private/{{ ansible_hostname }}.{{ pot_domain }}.sha256.4096.key"
+rsyslog_rsyslog_collector_dns_name: "main01.{{ pot_domain }}"
+rsyslog_rsyslog_collector_host_name: "main01.{{ pot_domain }}"
 rsyslog_rsyslog_d_files:
       10-forward-all-logs-to-collector:
         settings:

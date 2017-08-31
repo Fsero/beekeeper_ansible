@@ -10,10 +10,10 @@
 
      - name: copyiing cert
        when: "'pki' not in group_names"
-       copy: src={{ secrets_certs_path }}/servers/{{ ansible_hostname }}.superprivyhosting.com.sha256.4096.crt
-             dest=/etc/ssl/certs/{{ ansible_hostname }}.superprivyhosting.com.sha256.4096.crt owner=root group=root mode=0400
+       copy: src={{ secrets_certs_path }}/servers/{{ ansible_hostname }}.{{ pot_domain }}.sha256.4096.crt
+             dest=/etc/ssl/certs/{{ ansible_hostname }}.{{ pot_domain }}.sha256.4096.crt owner=root group=root mode=0400
 
      - name: copying key
        when: "'pki' not in group_names"
-       copy: src={{ secrets_certs_path }}/servers/{{ ansible_hostname }}.superprivyhosting.com.sha256.4096.key
-              dest=/etc/ssl/private/{{ ansible_hostname }}.superprivyhosting.com.sha256.4096.key owner=root group=root mode=0400
+       copy: src={{ secrets_certs_path }}/servers/{{ ansible_hostname }}.{{ pot_domain }}.sha256.4096.key
+              dest=/etc/ssl/private/{{ ansible_hostname }}.{{ pot_domain }}.sha256.4096.key owner=root group=root mode=0400
